@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head></h:head>
+    <h:body>
+        <f:view>
+            <h:form id="unos">
+
+                <p:panelGrid  id="putovanje" columns="2">
+                    
+                    <p:outputLabel value="Naziv:" for="naziv" />
+                    <p:inputText id="naziv" value="#{putovanjeManagedBean.putovanje.naziv}" title="Naziv" required="true" requiredMessage="The Naziv field is required."/>
+                    <p:outputLabel value="DatumOd:" for="datumOd" />
+                    <p:calendar id="datumOd" value="#{putovanjeManagedBean.putovanje.datumOd}" title="DatumOd">
+                        <f:convertDateTime pattern="MM/dd/yyyy" />
+                    </p:calendar>
+                    <p:outputLabel value="DatumDo:" for="datumDo" />
+                    <p:calendar id="datumDo" value="#{putovanjeManagedBean.putovanje.datumDo}" title="DatumDo">
+                        <f:convertDateTime pattern="MM/dd/yyyy" />
+                    </p:calendar>
+
+                </p:panelGrid>
+                <p:fragment autoUpdate="true">
+                    <p:outputLabel value="Naziv:" for="nazivtreka" />
+                    <p:inputText id="nazivtreka" value="#{putovanjeManagedBean.trek.naziv}" title="Naziv" />
+
+                    <p:commandButton value="Dodaj trek" type="submit" update=":lista" action="#{putovanjeManagedBean.dodajTrek()}"/>
+
+                </p:fragment>
+                <p:commandButton value="Sacuvaj putovanje" type="submit" action="#{putovanjeManagedBean.sacuvajPutovanje()}" update="@all"/>
+                <p:growl id="messages" showDetail="true" autoUpdate="true"  />
+            </h:form>
+
+        </f:view>
+
+        <f:view  >
+
+
+            <h:form id="lista">
+                <h1><h:outputText value="List"/></h1>
+                <p:dataTable value="#{putovanjeManagedBean.trekovi}" var="item">
+                  
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Naziv"/>
+                        </f:facet>
+                        <h:outputText value="#{item.naziv}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Kilometraza"/>
+                        </f:facet>
+                        <h:outputText value="#{item.kilometraza}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Vreme"/>
+                        </f:facet>
+                        <h:outputText value="#{item.vreme}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="ProsecnaBrzina"/>
+                        </f:facet>
+                        <h:outputText value="#{item.prosecnaBrzina}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="UkupanUspon"/>
+                        </f:facet>
+                        <h:outputText value="#{item.ukupanUspon}"/>
+                    </p:column>
+                   
+                </p:dataTable>
+            </h:form>
+        </f:view>
+
+
+    </h:body>
+</html>

@@ -1,0 +1,87 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head>
+
+
+    </h:head>
+    <p>#{logInManagedBean.korisnik.ime}</p>
+    <p:commandButton value="Log out" id="submit" actionListener="#{logInManagedBean.logout()}" type="submit"/>
+
+    <h:body>
+        <f:view>
+
+
+            <h:form>
+                <h1><h:outputText value="List"/></h1>
+                <p:dataTable value="#{korisnikbean.vratiSveKorisnike()}" var="item">
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="IdKorisnik"/>
+                        </f:facet>
+                        <h:outputText value="#{item.idKorisnik}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Ime"/>
+                        </f:facet>
+                        <h:outputText value="#{item.ime}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Prezime"/>
+                        </f:facet>
+                        <h:outputText value="#{item.prezime}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Jmbg"/>
+                        </f:facet>
+                        <h:outputText value="#{item.jmbg}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="NazivBicikla"/>
+                        </f:facet>
+                        <h:outputText value="#{item.nazivBicikla}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="TipBicikla"/>
+                        </f:facet>
+                        <h:outputText value="#{item.tipBicikla}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Email"/>
+                        </f:facet>
+                        <h:outputText value="#{item.email}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Password"/>
+                        </f:facet>
+                        <h:outputText value="#{item.password}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="Username"/>
+                        </f:facet>
+                        <h:outputText value="#{item.username}"/>
+                    </p:column>
+                    <p:column>
+                        <f:facet name="header">
+                            <h:outputText value="MestoID"/>
+                        </f:facet>
+                        <h:outputText value="#{item.mestoID}"/>
+                    </p:column>
+                </p:dataTable>
+            </h:form>
+        </f:view>
+        <p:link outcome="izmenikorisnika" value="izmeni podatke"></p:link>
+    </h:body>
+</html>
