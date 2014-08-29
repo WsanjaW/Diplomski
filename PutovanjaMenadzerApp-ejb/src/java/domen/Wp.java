@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package domen;
 
 import java.io.Serializable;
@@ -38,6 +37,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Wp.findByElev", query = "SELECT w FROM Wp w WHERE w.elev = :elev"),
     @NamedQuery(name = "Wp.findByTime", query = "SELECT w FROM Wp w WHERE w.time = :time")})
 public class Wp implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected WpPK wpPK;
@@ -58,6 +58,13 @@ public class Wp implements Serializable {
     private Trek trek;
 
     public Wp() {
+    }
+
+    public Wp(double lat, double lon, double elev, Date time) {
+        this.lat = lat;
+        this.lon = lon;
+        this.elev = elev;
+        this.time = time;
     }
 
     public Wp(WpPK wpPK) {
@@ -140,5 +147,5 @@ public class Wp implements Serializable {
     public String toString() {
         return "domen.Wp[ wpPK=" + wpPK + " ]";
     }
-    
+
 }

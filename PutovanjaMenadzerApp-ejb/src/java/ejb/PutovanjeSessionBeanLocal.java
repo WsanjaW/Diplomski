@@ -21,6 +21,8 @@ public interface PutovanjeSessionBeanLocal {
 
     public List<Putovanje> vratiPutovanja();
 
+    void izmeniPutovanje(Putovanje putovanje);
+
     
     
 }

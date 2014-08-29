@@ -9,6 +9,8 @@ package ejb;
 import domen.Putovanje;
 import domen.Trek;
 import domen.TrekPK;
+import domen.Wp;
+import domen.WpPK;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -45,6 +47,8 @@ public class PutovanjeSessionBean implements PutovanjeSessionBeanLocal {
         }
         em.merge(putovanje);
     }
+    
+    
 
     @Override
     public List<Putovanje> vratiPutovanja() {
@@ -57,5 +61,24 @@ public class PutovanjeSessionBean implements PutovanjeSessionBeanLocal {
 //        }
        
         return putovanja;
+    }
+
+    @Override
+    public void izmeniPutovanje(Putovanje putovanje) {
+       
+        int id = putovanje.getIdPutovanje();
+        int i = 1;
+        for (Trek t : putovanje.getTrekList()) {
+            t.setPutovanje(putovanje);
+            t.setTrekPK(new TrekPK(id, i));
+            int j = 1;
+            for (Wp wp : t.getWpList()) {
+                wp.setWpPK(new WpPK(j, t.getTrekPK().getIdTrek(), t.getTrekPK().getIdPutovanje()));
+                j++;
+            }
+            i++;
+        }
+        em.merge(putovanje);
+        
     }
 }
