@@ -22,7 +22,8 @@ public class Util {
 
     public static void posaljiMail(String mail, String kod) {
 
-       
+        final String username = "njtprojekatfon@gmail.com";
+        final String password = "njtprojekat";
 
         Properties props = new Properties();
         props.put("mail.smtp.auth", "true");

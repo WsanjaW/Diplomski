@@ -10,11 +10,7 @@ import domen.Putovanje;
 import domen.Trek;
 import domen.TrekPK;
 import ejb.PutovanjeSessionBeanLocal;
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,9 +22,8 @@ import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.faces.view.facelets.FaceletContext;
 import javax.inject.Named;
-import org.primefaces.context.RequestContext;
+import obradafajla.ObradaFajla;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -47,6 +42,7 @@ public class PutovanjeManagedBean implements Serializable {
     private Trek trek;
     private List<Trek> trekovi;
     private UploadedFile fajl;
+    private Trek t;
 
     /**
      * Creates a new instance of PutovanjeManagedBean
@@ -58,50 +54,54 @@ public class PutovanjeManagedBean implements Serializable {
     public void init() {
         trek = new Trek();
         trek.setTrekPK(new TrekPK());
-        putovanje = new Putovanje();
+        t = new Trek();
+        //putovanje = new Putovanje();
         trekovi = new LinkedList<>();
     }
 
     public void dodajTrek() {
-//        try {
-////            InputStream in = fajl.getInputstream();
-////            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
-////            StringBuilder out = new StringBuilder();
-////            String line;
-////            while ((line = reader.readLine()) != null) {
-////                out.append(line);
-////            }
-//            
-//        } catch (IOException ex) {
-//            ex.printStackTrace();
-//        }
 
-        Trek t = new Trek();
-        t.setTrekPK(trek.getTrekPK());
-        t.setNaziv(trek.getNaziv());
-        trekovi.add(t);
+        sacuvajPutovanje();
 
     }
 
     public void sacuvajPutovanje() {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         Korisnik k = (Korisnik) context.getSessionMap().get("user");
-        putovanje.setTrekList(trekovi);
+       // putovanje.setTrekList(trekovi);
+
+        putovanje = (Putovanje) context.getSessionMap().get("putovanje");
         putovanje.setBiciklistaId(k);
-        putovanjeSessionBean.sacuvajPutovanje(putovanje);
+        t.setNaziv(trek.getNaziv());
+        putovanje.getTrekList().add(t);
+        putovanjeSessionBean.izmeniPutovanje(putovanje);
         FacesMessage message = new FacesMessage(putovanje.getNaziv());
-        trek = new Trek();
-        trek.setTrekPK(new TrekPK());
-        putovanje = new Putovanje();
-        trekovi = new LinkedList<>();
-        FacesContext.getCurrentInstance().addMessage(null, message);
+//        trek = new Trek();
+//        trek.setTrekPK(new TrekPK());
+//        putovanje = new Putovanje();
+//        trekovi = new LinkedList<>();
+//        FacesContext.getCurrentInstance().addMessage(null, message);
 
     }
 
     public void handleFileUpload(FileUploadEvent event) {
-        FacesMessage message = new FacesMessage("Succesful", event.getFile().getFileName() + " is uploaded.");
-        FacesContext.getCurrentInstance().addMessage(null, message);
 
+        UploadedFile uFajl = event.getFile();
+
+        ObradaFajla of = null;
+        try {
+            of = new ObradaFajla(uFajl.getInputstream());
+        } catch (IOException ex) {
+            Logger.getLogger(PutovanjeManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        t.setTrekPK(trek.getTrekPK());
+
+        t.setKilometraza(of.getKilometraza());
+        t.setWpList(of.getAllWp());
+
+        FacesMessage message = new FacesMessage("Kilometraza " + t.getKilometraza());
+        FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
     public Putovanje getPutovanje() {

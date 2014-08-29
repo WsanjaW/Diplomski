@@ -5,7 +5,9 @@
  */
 package obradafajla;
 
+import domen.Wp;
 import java.io.File;
+import java.io.InputStream;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,19 +27,22 @@ import org.dom4j.io.SAXReader;
  */
 public class ObradaFajla {
 
-    private File fajl;
+    private InputStream fajl;
     private Double kilometraza;
     private Double prosecnaBrzina;
     private long vreme;
     private List<Object> trekovi;
+    private List<Wp> allWp;
 
-    public ObradaFajla(File fajl) {
+    public ObradaFajla(InputStream fajl) {
         this.fajl = fajl;
         trekovi = new ArrayList<>();
+        allWp = new ArrayList<>();
         napuni();
         obradi();
     }
 
+      
     public Double getKilometraza() {
         return kilometraza;
     }
@@ -56,6 +61,13 @@ public class ObradaFajla {
         return vreme;
     }
 
+    public List<Wp> getAllWp() {
+        return allWp;
+    }
+
+   
+
+    
     public void napuni() {
         try {
             SAXReader reader = new SAXReader();
@@ -69,13 +81,13 @@ public class ObradaFajla {
             // iterate through child elements of root with element name "trk"
             for (Iterator i = root.elementIterator("trk"); i.hasNext();) {
                 Element trk = (Element) i.next();
-                List<WP> wpList = new LinkedList<>();
+                List<Wp> wpList = new LinkedList<>();
                 for (Iterator<Element> i1 = trk.elementIterator("trkseg"); i1.hasNext();) {
                     Element trkseg = i1.next();
                     for (Iterator i2 = trkseg.elementIterator("trkpt"); i2.hasNext();) {
                         Element wp = (Element) i2.next();
-                        System.out.println(wp.attributeValue("lat"));
-                        System.out.println(wp.elementText("time"));
+//                        System.out.println(wp.attributeValue("lat"));
+//                        System.out.println(wp.elementText("time"));
                         double lat = Double.parseDouble(wp.attributeValue("lat"));
                         double lon = Double.parseDouble(wp.attributeValue("lon"));
                         // double elev = Double.parseDouble(wp.elementText("ele"));
@@ -83,10 +95,11 @@ public class ObradaFajla {
                         Date time = (ft.parse(wp.elementText("time")));
                         //  Date time = (ft.parse("2013-08-12T07:16:30.999Z"));
 
-                        wpList.add(new WP(lat, lon, 0.0, time));
+                        wpList.add(new Wp(lat, lon, 0.0, time));
 
                     }
                 }
+                System.out.println(wpList.size());
                 trekovi.add(wpList);
             }
 
@@ -102,11 +115,14 @@ public class ObradaFajla {
 
         vreme = 0;
         //vreme = new Date(0);
-        
+        System.out.println(trekovi.size());
         for (Object object : trekovi) {
-            LinkedList<WP> list = (LinkedList<WP>) object;
-            WP priv = list.getFirst();
-            for (WP wp : list.subList(1, list.size())) {
+            
+            LinkedList<Wp> list = (LinkedList<Wp>) object;
+            Wp priv = list.getFirst();
+            System.out.println(list.size());
+            for (Wp wp : list.subList(1, list.size())) {
+                allWp.add(wp);
                 kilometraza += izracunajDistancu(wp, priv);
                 long dif = wp.getTime().getTime() - priv.getTime().getTime();
                 if (dif < 48000) {
@@ -120,7 +136,7 @@ public class ObradaFajla {
 
     }
 
-    public double izracunajDistancu(WP wp1, WP wp2) {
+    public double izracunajDistancu(Wp wp1, Wp wp2) {
         double total = 0.0;
         double lon1 = wp1.getLon();
         double lat1 = wp1.getLat();
@@ -141,16 +157,16 @@ public class ObradaFajla {
         return x * PIx / 180;
     }
 
-    public static void main(String[] args) {
-        ObradaFajla o = new ObradaFajla(new File("SokoBanja-Nis.gpx"));
-        o.napuni();
-        o.obradi();
-        System.out.println("gdgfgf");
-        System.out.println(o.kilometraza);
-        long diff = o.vreme;
-        long diffSeconds = diff / 1000 % 60;
-        long diffMinutes = diff / (60 * 1000) % 60;
-        long diffHours = diff / (60 * 60 * 1000);
-        System.out.println(diffHours + ":" + diffMinutes + ":" + diffSeconds);
-    }
+//    public static void main(String[] args) {
+//        ObradaFajla o = new ObradaFajla(new File("SokoBanja-Nis.gpx"));
+//        o.napuni();
+//        o.obradi();
+//        System.out.println("gdgfgf");
+//        System.out.println(o.kilometraza);
+//        long diff = o.vreme;
+//        long diffSeconds = diff / 1000 % 60;
+//        long diffMinutes = diff / (60 * 1000) % 60;
+//        long diffHours = diff / (60 * 60 * 1000);
+//        System.out.println(diffHours + ":" + diffMinutes + ":" + diffSeconds);
+//    }
 }

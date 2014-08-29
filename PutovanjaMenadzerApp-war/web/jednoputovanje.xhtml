@@ -5,47 +5,78 @@
       xmlns:h="http://xmlns.jcp.org/jsf/html"
       xmlns:p="http://primefaces.org/ui" 
       xmlns:f="http://xmlns.jcp.org/jsf/core">
-    <h:head></h:head>
+    <h:head>
+        <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+    </h:head>
     <h:body>
         <f:view>
 
 
             <h:form>
-                <h1><h:outputText value="View"/></h1>
-                <p:panelGrid columns="2">
-                    <h:outputText value="DatumOd:"/>
-                    <h:outputText value="#{svaPutovanjaManagedBean.selektovanoPutovanje.datumOd}" title="DatumOd">
-                        <f:convertDateTime pattern="MM/dd/yyyy" />
-                    </h:outputText>
-                    <h:outputText value="DatumDo:"/>
-                    <h:outputText value="#{svaPutovanjaManagedBean.selektovanoPutovanje.datumDo}" title="DatumDo">
-                        <f:convertDateTime pattern="MM/dd/yyyy" />
-                    </h:outputText>
-                    <h:outputText value="BiciklistaId:"/>
-                    <h:outputText value="#{svaPutovanjaManagedBean.selektovanoPutovanje.biciklistaId}" title="BiciklistaId"/>
-                    <h:outputText value="Naziv:"/>
-                    <h:outputText value="#{svaPutovanjaManagedBean.selektovanoPutovanje.naziv}" title="Naziv"/>
-                    <h:outputText value="IdPutovanje:"/>
-                    <h:outputText value="#{svaPutovanjaManagedBean.selektovanoPutovanje.idPutovanje}" title="IdPutovanje"/>
-                    <h:outputText value="Trekovi"/>
-                    <p:carousel value="#{svaPutovanjaManagedBean.selektovanoPutovanje.trekList}" headerText="Basic" var="trek">
-                        <h:panelGrid columns="2" style="width:100%" cellpadding="5" columnClasses="label,value">
+                <p:tabView>
+                    <p:tab title="Godfather Part I">
+                        <p:panelGrid columns="2">
+                            <h:outputText value="DatumOd:"/>
+                            <h:outputText value="#{svaPutovanjaManagedBean.selektovanoPutovanje.datumOd}" title="DatumOd">
+                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                            </h:outputText>
+                            <h:outputText value="DatumDo:"/>
+                            <h:outputText value="#{svaPutovanjaManagedBean.selektovanoPutovanje.datumDo}" title="DatumDo">
+                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                            </h:outputText>
+                            <h:outputText value="BiciklistaId:"/>
+                            <h:outputText value="#{svaPutovanjaManagedBean.selektovanoPutovanje.biciklistaId}" title="BiciklistaId"/>
+                            <h:outputText value="Naziv:"/>
+                            <h:outputText value="#{svaPutovanjaManagedBean.selektovanoPutovanje.naziv}" title="Naziv"/>
+                            <h:outputText value="IdPutovanje:"/>
+                            <h:outputText value="#{svaPutovanjaManagedBean.selektovanoPutovanje.idPutovanje}" title="IdPutovanje"/>
+                            <h:outputText value="Trekovi"/>
+                            <p:carousel value="#{svaPutovanjaManagedBean.selektovanoPutovanje.trekList}" headerText="Basic" var="trek">
+                                <h:panelGrid columns="2" style="width:100%" cellpadding="5" columnClasses="label,value">
 
 
-                            <h:outputText value="Id:" />
-                            <h:outputText value="#{trek.naziv}" />
+                                    <h:outputText value="Id:" />
+                                    <h:outputText value="#{trek.naziv}" />
 
-                            <h:outputText value="Year" />
-                            <h:outputText value="#{trek.kilometraza}" />
+                                    <h:outputText value="Year" />
+                                    <h:outputText value="#{trek.kilometraza}" />
 
 
+                                </h:panelGrid>
+
+                                <f:facet name="footer">
+                                    In total there are #{svaPutovanjaManagedBean.selektovanoPutovanje.trekList.size()} trekova.
+                                </f:facet>
+                            </p:carousel>
+                            <p:growl id="growl" life="3000" />
+
+                            <p:gmap id="gmap" center="36.890257,30.707417" zoom="13" type="HYBRID" style="width:600px;height:400px" model="#{prikazTrekaManagedBean.polylineModel}">
+                                <p:ajax event="overlaySelect" listener="#{prikazTrekaManagedBean.onPolylineSelect}" update="growl" />
+                            </p:gmap>
+                        </p:panelGrid>
+                    </p:tab>
+                    <p:tab title="Godfather Part II">
+                        <h:form id="unos">
+                            <p:outputLabel value="Naziv:" for="nazivtreka" />
+                            <p:inputText id="nazivtreka" value="#{putovanjeManagedBean.trek.naziv}" title="Naziv" />
+                            <p:commandButton value="Dodaj trek" type="submit" ajax="false" action="#{putovanjeManagedBean.dodajTrek()}"/>
+                            <p:growl id="messages" showDetail="true" autoUpdate="true"  />
+                        </h:form>
+                        <h:form id="unosFajla" enctype="multipart/form-data">
+                            <p:fileUpload fileUploadListener="#{putovanjeManagedBean.handleFileUpload}" mode="advanced" dragDropSupport="false"
+                                          required="true"/>
+                        </h:form>
+
+                    </p:tab>
+                    <p:tab title="Godfather Part III">
+                        <h:panelGrid columns="2" cellpadding="10">
+                            <p:graphicImage name="demo/images/godfather/godfather3.jpg" />
+                            <h:outputText value="After a break of more than 15 years..." />
                         </h:panelGrid>
+                    </p:tab>
+                </p:tabView>
 
-                        <f:facet name="footer">
-                            In total there are #{svaPutovanjaManagedBean.selektovanoPutovanje.trekList.size()} trekova.
-                        </f:facet>
-                    </p:carousel>
-                </p:panelGrid>
+
             </h:form>
 
 

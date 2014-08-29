@@ -8,30 +8,20 @@
     <h:head></h:head>
     <h:body>
         <f:view>
-            <h:form id="unos">
+            <h:form id="unos" enctype="multipart/form-data">
 
-                <p:panelGrid  id="putovanje" columns="2">
-                    
-                    <p:outputLabel value="Naziv:" for="naziv" />
-                    <p:inputText id="naziv" value="#{putovanjeManagedBean.putovanje.naziv}" title="Naziv" required="true" requiredMessage="The Naziv field is required."/>
-                    <p:outputLabel value="DatumOd:" for="datumOd" />
-                    <p:calendar id="datumOd" value="#{putovanjeManagedBean.putovanje.datumOd}" title="DatumOd">
-                        <f:convertDateTime pattern="MM/dd/yyyy" />
-                    </p:calendar>
-                    <p:outputLabel value="DatumDo:" for="datumDo" />
-                    <p:calendar id="datumDo" value="#{putovanjeManagedBean.putovanje.datumDo}" title="DatumDo">
-                        <f:convertDateTime pattern="MM/dd/yyyy" />
-                    </p:calendar>
 
-                </p:panelGrid>
+                <p:outputLabel value="Naziv:" for="nazivtreka" />
+                <p:inputText id="nazivtreka" value="#{putovanjeManagedBean.trek.naziv}" title="Naziv" />
                 <p:fragment autoUpdate="true">
-                    <p:outputLabel value="Naziv:" for="nazivtreka" />
-                    <p:inputText id="nazivtreka" value="#{putovanjeManagedBean.trek.naziv}" title="Naziv" />
-
-                    <p:commandButton value="Dodaj trek" type="submit" update=":lista" action="#{putovanjeManagedBean.dodajTrek()}"/>
-
+                    <p:fileUpload fileUploadListener="#{putovanjeManagedBean.handleFileUpload}" mode="advanced" dragDropSupport="false"
+                                  update=":lista" required="true"/>
                 </p:fragment>
-                <p:commandButton value="Sacuvaj putovanje" type="submit" action="#{putovanjeManagedBean.sacuvajPutovanje()}" update="@all"/>
+
+                <p:commandButton value="Dodaj trek" type="submit" ajax="false" update=":lista" action="#{putovanjeManagedBean.dodajTrek()}"/>
+
+
+
                 <p:growl id="messages" showDetail="true" autoUpdate="true"  />
             </h:form>
 
@@ -43,7 +33,7 @@
             <h:form id="lista">
                 <h1><h:outputText value="List"/></h1>
                 <p:dataTable value="#{putovanjeManagedBean.trekovi}" var="item">
-                  
+
                     <p:column>
                         <f:facet name="header">
                             <h:outputText value="Naziv"/>
@@ -74,7 +64,7 @@
                         </f:facet>
                         <h:outputText value="#{item.ukupanUspon}"/>
                     </p:column>
-                   
+
                 </p:dataTable>
             </h:form>
         </f:view>
