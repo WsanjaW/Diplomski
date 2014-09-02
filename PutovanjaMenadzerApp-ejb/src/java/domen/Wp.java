@@ -35,7 +35,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "Wp.findByLon", query = "SELECT w FROM Wp w WHERE w.lon = :lon"),
     @NamedQuery(name = "Wp.findByLat", query = "SELECT w FROM Wp w WHERE w.lat = :lat"),
     @NamedQuery(name = "Wp.findByElev", query = "SELECT w FROM Wp w WHERE w.elev = :elev"),
-    @NamedQuery(name = "Wp.findByTime", query = "SELECT w FROM Wp w WHERE w.time = :time")})
+    @NamedQuery(name = "Wp.findByTime", query = "SELECT w FROM Wp w WHERE w.time = :time"),
+    @NamedQuery(name = "Wp.findId", query = "SELECT w FROM Wp w WHERE w.wpPK.idPutovanje = :idPutovanje AND w.wpPK.idTrek = :idTrek")})
 public class Wp implements Serializable {
 
     private static final long serialVersionUID = 1L;
