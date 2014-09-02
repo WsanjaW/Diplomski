@@ -7,41 +7,49 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head></h:head>
     <h:body>
-        <f:view>
+        <ui:composition template="ltemplate.xhtml">
+
+            <ui:define name="content">
+                <f:view>
 
 
-            <h:form>
-                <p:dataTable value="#{svaPutovanjaManagedBean.putovanja}" var="item" widgetVar="putovanjeTable"
-                             emptyMessage="No cars found with given criteria" filteredValue="#{svaPutovanjaManagedBean.filtriranaPutovanja}">
+                    <h:form>
+                        <p:dataTable value="#{svaPutovanjaManagedBean.putovanja}" var="item" widgetVar="putovanjeTable"
+                                     emptyMessage="No cars found with given criteria" filteredValue="#{svaPutovanjaManagedBean.filtriranaPutovanja}">
 
-                    <f:facet name="header">
-                        <p:outputPanel>
-                            <h:outputText value="Search all fields:" />
-                            <p:inputText id="globalFilter" onkeyup="PF('putovanjeTable').filter()" style="width:150px" placeholder="Enter keyword"/>
-                        </p:outputPanel>
-                    </f:facet>
+                            <f:facet name="header">
+                                <p:outputPanel>
+                                    <h:outputText value="Search all fields:" />
+                                    <p:inputText id="globalFilter" onkeyup="PF('putovanjeTable').filter()" style="width:150px" placeholder="Enter keyword"/>
+                                </p:outputPanel>
+                            </f:facet>
 
-                    <p:column filterBy="#{item.naziv}" headerText="naziv" footerText="stats" filterMatchMode="startsWith">
-                        <f:facet name="header">
-                            <h:outputText value="Naziv"/>
-                        </f:facet>
-                        <h:outputText value="#{item.naziv}"/>
-                    </p:column>
-                    <p:column filterBy="#{item.biciklistaId}" headerText="biciklista" footerText="stats" filterMatchMode="startsWith">
-                        <f:facet name="header">
-                            <h:outputText value="Biciklista"/>
-                        </f:facet>
-                        <h:outputText value="#{item.biciklistaId}"/>
-                    </p:column>
-                    <p:column>
-                        <p:commandButton value="Prikazi" action="#{svaPutovanjaManagedBean.prikaziPutovanje()}">
-                            <f:setPropertyActionListener value="#{item}" 
-                                                         target="#{svaPutovanjaManagedBean.selektovanoPutovanje}" />
-                        </p:commandButton>
-                    </p:column>
-                </p:dataTable>
-            </h:form>
-        </f:view>
+                            <p:column filterBy="#{item.naziv}" headerText="naziv" footerText="stats" filterMatchMode="startsWith">
+                                <f:facet name="header">
+                                    <h:outputText value="Naziv"/>
+                                </f:facet>
+                                <h:outputText value="#{item.naziv}"/>
+                            </p:column>
+                            <p:column filterBy="#{item.biciklistaId}" headerText="biciklista" footerText="stats" filterMatchMode="startsWith">
+                                <f:facet name="header">
+                                    <h:outputText value="Biciklista"/>
+                                </f:facet>
+                                <h:outputText value="#{item.biciklistaId}"/>
+                            </p:column>
+                            <p:column>
+                                <p:commandButton value="Prikazi" action="#{svaPutovanjaManagedBean.prikaziPutovanje()}">
+                                    <f:setPropertyActionListener value="#{item}" 
+                                                                 target="#{svaPutovanjaManagedBean.selektovanoPutovanje}" />
+                                </p:commandButton>
+                            </p:column>
+                        </p:dataTable>
+                    </h:form>
+                </f:view>
+
+            </ui:define>
+
+        </ui:composition>
+
 
     </h:body>
 </html>

@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.inject.Named;
@@ -24,7 +24,7 @@ import javax.inject.Named;
  * @author Sanja
  */
 @Named(value = "svaPutovanjaManagedBean")
-@SessionScoped
+@RequestScoped
 public class SvaPutovanjaManagedBean implements Serializable {
 
     @EJB
@@ -40,13 +40,16 @@ public class SvaPutovanjaManagedBean implements Serializable {
      */
     public SvaPutovanjaManagedBean() {
     }
+   
 
     @PostConstruct
     public void init() {
+       
         putovanja = putovanjeSessionBean.vratiPutovanja();
+        
 
     }
-
+   
     public void prikaziPutovanje() {
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
@@ -58,7 +61,7 @@ public class SvaPutovanjaManagedBean implements Serializable {
     }
 
     public List<Putovanje> getPutovanja() {
-        putovanja = putovanjeSessionBean.vratiPutovanja();
+        //putovanja = putovanjeSessionBean.vratiPutovanja();
         return putovanja;
     }
 

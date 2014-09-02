@@ -42,7 +42,6 @@ public class ObradaFajla {
         obradi();
     }
 
-      
     public Double getKilometraza() {
         return kilometraza;
     }
@@ -65,9 +64,6 @@ public class ObradaFajla {
         return allWp;
     }
 
-   
-
-    
     public void napuni() {
         try {
             SAXReader reader = new SAXReader();
@@ -93,7 +89,7 @@ public class ObradaFajla {
                         // double elev = Double.parseDouble(wp.elementText("ele"));
                         SimpleDateFormat ft = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss");
                         Date time = (ft.parse(wp.elementText("time")));
-                        //  Date time = (ft.parse("2013-08-12T07:16:30.999Z"));
+                        //Date time = (ft.parse("2013-08-12T07:16:30.999Z"));
 
                         wpList.add(new Wp(lat, lon, 0.0, time));
 
@@ -117,7 +113,7 @@ public class ObradaFajla {
         //vreme = new Date(0);
         System.out.println(trekovi.size());
         for (Object object : trekovi) {
-            
+
             LinkedList<Wp> list = (LinkedList<Wp>) object;
             Wp priv = list.getFirst();
             System.out.println(list.size());
@@ -132,7 +128,6 @@ public class ObradaFajla {
             }
 
         }
-
 
     }
 

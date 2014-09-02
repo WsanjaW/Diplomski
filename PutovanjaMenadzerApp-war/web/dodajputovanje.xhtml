@@ -7,68 +7,39 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head></h:head>
     <h:body>
-        <f:view>
-            <h:form id="unos" enctype="multipart/form-data">
+        <ui:composition template="ltemplate.xhtml">
+
+            <ui:define name="content">
+                <f:view>
+                    <h3> Unos novog putovanja:</h3>
+                    <br></br>
+                    <h:form id="unos">
+
+                        <p:panelGrid id="putovanje" columns="2">
+
+                            <p:outputLabel value="Naziv:" for="naziv" />
+                            <p:inputText id="naziv" value="#{putovanje2ManagedBean.putovanje.naziv}" title="Naziv" required="true" requiredMessage="The Naziv field is required."/>
+                            <p:outputLabel value="DatumOd:" for="datumOd" />
+                            <p:calendar id="datumOd" value="#{putovanje2ManagedBean.putovanje.datumOd}" title="DatumOd">
+                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                            </p:calendar>
+                            <p:outputLabel value="DatumDo:" for="datumDo" />
+                            <p:calendar id="datumDo" value="#{putovanje2ManagedBean.putovanje.datumDo}" title="DatumDo">
+                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                            </p:calendar>
+
+                        </p:panelGrid>
+                      <br/>
+                        <p:commandButton value="Sacuvaj putovanje" type="submit" action="#{putovanje2ManagedBean.sacuvajPutovanje()}" update="@all"/>
+                        <p:growl id="messages" showDetail="true" autoUpdate="true" />
+                    </h:form>
+
+                </f:view>
 
 
-                <p:outputLabel value="Naziv:" for="nazivtreka" />
-                <p:inputText id="nazivtreka" value="#{putovanjeManagedBean.trek.naziv}" title="Naziv" />
-                <p:fragment autoUpdate="true">
-                    <p:fileUpload fileUploadListener="#{putovanjeManagedBean.handleFileUpload}" mode="advanced" dragDropSupport="false"
-                                  update=":lista" required="true"/>
-                </p:fragment>
-
-                <p:commandButton value="Dodaj trek" type="submit" ajax="false" update=":lista" action="#{putovanjeManagedBean.dodajTrek()}"/>
+            </ui:define>
 
 
-
-                <p:growl id="messages" showDetail="true" autoUpdate="true"  />
-            </h:form>
-
-        </f:view>
-
-        <f:view  >
-
-
-            <h:form id="lista">
-                <h1><h:outputText value="List"/></h1>
-                <p:dataTable value="#{putovanjeManagedBean.trekovi}" var="item">
-
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="Naziv"/>
-                        </f:facet>
-                        <h:outputText value="#{item.naziv}"/>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="Kilometraza"/>
-                        </f:facet>
-                        <h:outputText value="#{item.kilometraza}"/>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="Vreme"/>
-                        </f:facet>
-                        <h:outputText value="#{item.vreme}"/>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="ProsecnaBrzina"/>
-                        </f:facet>
-                        <h:outputText value="#{item.prosecnaBrzina}"/>
-                    </p:column>
-                    <p:column>
-                        <f:facet name="header">
-                            <h:outputText value="UkupanUspon"/>
-                        </f:facet>
-                        <h:outputText value="#{item.ukupanUspon}"/>
-                    </p:column>
-
-                </p:dataTable>
-            </h:form>
-        </f:view>
-
-
+        </ui:composition>
     </h:body>
 </html>
