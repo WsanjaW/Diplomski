@@ -8,6 +8,7 @@ package bean;
 import domen.Korisnik;
 import domen.Mesto;
 import ejb.KorisnikSessionBeanLocal;
+import ejb.MestoSessionBeanLocal;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +17,9 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.RequestScoped;
 import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.mail.Message;
 import javax.mail.MessagingException;
@@ -25,6 +28,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import org.primefaces.model.TreeNode;
 import util.Util;
 
 /**
@@ -32,11 +36,15 @@ import util.Util;
  * @author Sanja
  */
 @ManagedBean(name = "korisnikbean")
-@SessionScoped
+@RequestScoped
 public class KorisnikManagedBean implements Serializable {
 
     @EJB
     private KorisnikSessionBeanLocal korisnikSessionBean;
+    
+    @EJB
+    private MestoSessionBeanLocal mestoSessionBean;
+                
     private Korisnik korisnik;
     private String mestoId;
 
@@ -64,21 +72,20 @@ public class KorisnikManagedBean implements Serializable {
     }
 
     public void sacuvajKorsinika(Korisnik k) {
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        
         System.out.println(mestoId);
-        korisnik.setMestoID(korisnikSessionBean.vratiMesto(mestoId));
+        korisnik.setMestoID(mestoSessionBean.getById(mestoId));
         String kod = Util.generisKod();
         korisnik.setAktivacionikod(kod);
         korisnik.setAktivan(false);
         korisnikSessionBean.sacuvajKorisnika(korisnik);
         Util.posaljiMail(korisnik.getEmail(),kod);
-
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Korisnik unet", "Mejl za aktivaciju"));
 
     }
 
     public List<Mesto> svaMesta() {
-        return korisnikSessionBean.svaMesta();
+        return mestoSessionBean.svaMesta();
     }
 
     public String getMestoId() {
@@ -98,9 +105,7 @@ public class KorisnikManagedBean implements Serializable {
     }
 
     
-    public String aktivacija() {
-        return "LINK";
-    }
+    
 
 
 }

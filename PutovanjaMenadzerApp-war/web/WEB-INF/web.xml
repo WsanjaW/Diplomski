@@ -36,4 +36,22 @@
     <login-config>
         <auth-method>BASIC</auth-method>
     </login-config>
+    <ejb-local-ref>
+        <ejb-ref-name>MestoSessionBean</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.MestoSessionBeanLocal</local>
+        <ejb-link>PutovanjaMenadzerApp-ejb.jar#MestoSessionBean</ejb-link>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>MestoSessionBean1</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.MestoSessionBeanLocal</local>
+        <ejb-link>PutovanjaMenadzerApp-ejb.jar#MestoSessionBean</ejb-link>
+    </ejb-local-ref>
+    <ejb-local-ref>
+        <ejb-ref-name>KorisnikSessionBean</ejb-ref-name>
+        <ejb-ref-type>Session</ejb-ref-type>
+        <local>ejb.KorisnikSessionBeanLocal</local>
+        <ejb-link>PutovanjaMenadzerApp-ejb.jar#KorisnikSessionBean</ejb-link>
+    </ejb-local-ref>
 </web-app>

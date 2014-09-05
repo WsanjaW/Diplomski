@@ -1,0 +1,54 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://xmlns.jcp.org/jsf/html"
+      xmlns:p="http://primefaces.org/ui" 
+      xmlns:f="http://xmlns.jcp.org/jsf/core">
+    <h:head></h:head>
+    <h:body>
+        <ui:composition template="ltemplate.xhtml">
+
+            <ui:define name="content">
+                <f:view>
+
+
+                    <h:form>
+
+                        <h1><h:outputText value="Create/Edit"/></h1>
+                        <p:panelGrid columns="2">
+
+                            <p:outputLabel value="Naziv:" for="naziv" />
+                            <p:inputText id="naziv" value="#{putovanjeManagedBean.putovanje.naziv}" title="Naziv" required="true" requiredMessage="The Naziv field is required."/>
+                            <p:outputLabel value="DatumOd:" for="datumOd" />
+                            <p:calendar id="datumOd" value="#{putovanjeManagedBean.putovanje.datumOd}" title="DatumOd" >
+                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                            </p:calendar>
+                            <p:outputLabel value="DatumDo:" for="datumDo" />
+                            <p:calendar id="datumDo" value="#{putovanjeManagedBean.putovanje.datumDo}" title="DatumDo" >
+                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                            </p:calendar>
+
+                            <p:commandButton value="Submit" id="submit" actionListener="#{putovanjeManagedBean.izmeniPutovanje()}" type="submit" update="growl"/>
+                            <p:growl id="growl" life="3000" />
+                        </p:panelGrid>
+
+                    </h:form>
+                </f:view>
+            </ui:define>
+            <ui:define name="menu">
+                <p:submenu rendered="#{logInManagedBean.korisnik eq putovanjeManagedBean.putovanje.biciklistaId }" label="Putovanje">
+                    <p:menuitem value="Prikazi putovanje" outcome="jednoputovanje" icon="ui-icon-home"/>
+                    <p:menuitem value="Dodaj trek" outcome="dodajtrek" icon="ui-icon-home"/>
+                    <p:menuitem value="Izmeni putovanje"  icon="ui-icon-star" outcome="izmeniputovanje"/>
+                    <p:menuitem value="Dodaj korisnike"   outcome="korisniknaputovanju" icon="ui-icon-star"/>
+                </p:submenu>
+            </ui:define>
+        </ui:composition>
+
+
+
+
+
+    </h:body>
+</html>

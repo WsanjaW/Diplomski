@@ -14,17 +14,17 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.inject.Named;
 
 /**
  *
  * @author Sanja
  */
-@Named(value = "svaPutovanjaManagedBean")
-@RequestScoped
+@ManagedBean(name = "svaPutovanjaManagedBean")
+@SessionScoped
 public class SvaPutovanjaManagedBean implements Serializable {
 
     @EJB
@@ -40,25 +40,29 @@ public class SvaPutovanjaManagedBean implements Serializable {
      */
     public SvaPutovanjaManagedBean() {
     }
-   
 
     @PostConstruct
     public void init() {
-       
+
         putovanja = putovanjeSessionBean.vratiPutovanja();
-        
 
     }
-   
+
     public void prikaziPutovanje() {
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            context.getSessionMap().put("putovanje", selektovanoPutovanje);
+            //context.getSessionMap().put("putovanje", selektovanoPutovanje);
             context.redirect(context.getRequestContextPath() + "/faces/jednoputovanje.xhtml");
         } catch (IOException ex) {
             Logger.getLogger(SvaPutovanjaManagedBean.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+    
+    
+    
+
+    
 
     public List<Putovanje> getPutovanja() {
         //putovanja = putovanjeSessionBean.vratiPutovanja();

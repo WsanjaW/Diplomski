@@ -6,47 +6,56 @@
 package bean;
 
 import domen.Korisnik;
+import domen.Mesto;
 import domen.Putovanje;
 import domen.Trek;
 import domen.TrekPK;
+import ejb.MestoSessionBeanLocal;
 import ejb.PutovanjeSessionBeanLocal;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.inject.Inject;
-import javax.inject.Named;
-import obradafajla.ObradaFajla;
-import org.primefaces.event.FileUploadEvent;
+import org.primefaces.model.DualListModel;
 import org.primefaces.model.UploadedFile;
 
 /**
  *
  * @author Sanja
  */
-@Named(value = "putovanje2ManagedBean")
-@RequestScoped
+@ManagedBean(name = "putovanjeManagedBean")
+@ViewScoped
 public class PutovanjeManagedBean implements Serializable {
 
     @EJB
+    private MestoSessionBeanLocal mestoSessionBean;
+
+    @EJB
     private PutovanjeSessionBeanLocal putovanjeSessionBean;
-    
-    @Inject
+
+    @ManagedProperty("#{logInManagedBean}")
     private LogInManagedBean log;
+
+    @ManagedProperty("#{svaPutovanjaManagedBean}")
+    private SvaPutovanjaManagedBean svaPutovanjaManagedBean;
 
     private Putovanje putovanje;
     private Trek trek;
     private List<Trek> trekovi;
     private UploadedFile fajl;
-    private Trek t;
+
+    private DualListModel<Mesto> mesta;
 
     /**
      * Creates a new instance of PutovanjeManagedBean
@@ -58,9 +67,33 @@ public class PutovanjeManagedBean implements Serializable {
     public void init() {
         trek = new Trek();
         trek.setTrekPK(new TrekPK());
-        t = new Trek();
-        putovanje = new Putovanje();
-        trekovi = new LinkedList<>();
+
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        if ("/dodajputovanje.xhtml".equals(context.getRequestPathInfo())) {
+            putovanje = new Putovanje();
+            trekovi = new LinkedList<>();
+
+            List<Mesto> izvornaMesta = new ArrayList<>();
+            List<Mesto> odabranaMesta = new ArrayList<>();
+            izvornaMesta = mestoSessionBean.svaMesta();
+            mesta = new DualListModel<>(izvornaMesta, odabranaMesta);
+        } else {
+            putovanje = svaPutovanjaManagedBean.getSelektovanoPutovanje();
+        }
+
+    }
+
+    public void obrisiPutovanje() {
+
+        putovanjeSessionBean.obrisi(putovanje);
+        svaPutovanjaManagedBean.getPutovanja().remove(putovanje);
+
+    }
+
+    public void izmeniPutovanje() {
+        putovanje = putovanjeSessionBean.izmeniPutovanje(putovanje);
+        FacesMessage message = new FacesMessage("Dodati korisnici");
+        FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
     public void dodajTrek() {
@@ -71,24 +104,35 @@ public class PutovanjeManagedBean implements Serializable {
 
     public void sacuvajPutovanje() {
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        //Korisnik k = log.korisnik;
-        Korisnik k = (Korisnik) context.getSessionMap().get("user");
-       // putovanje.setTrekList(trekovi);
+        Korisnik k = log.korisnik;
+        System.out.println(k);
+       // Korisnik k = (Korisnik) context.getSessionMap().get("user");
+        // putovanje.setTrekList(trekovi);
 
-       // putovanje = (Putovanje) context.getSessionMap().get("putovanje");
+        // putovanje = (Putovanje) context.getSessionMap().get("putovanje");
+        List<Mesto> izabranaMesta = mesta.getTarget();
+        putovanje.setMestoList(new ArrayList<Mesto>());
+        putovanje.setMestoList(izabranaMesta);
+
         putovanje.setBiciklistaId(k);
         putovanje.setTrekList(trekovi);
         putovanjeSessionBean.sacuvajPutovanje(putovanje);
-       // t.setNaziv(trek.getNaziv());
+        // t.setNaziv(trek.getNaziv());
         //putovanje.getTrekList().add(t);
-        //putovanjeSessionBean.izmeniPutovanje(putovanje);
+        //putovanjeSessionBean.dodajTrek(putovanje);
         FacesMessage message = new FacesMessage(putovanje.getNaziv());
-     
+        svaPutovanjaManagedBean.getPutovanja().add(putovanje);
+
 //        trek = new Trek();
 //        trek.setTrekPK(new TrekPK());
 //        putovanje = new Putovanje();
 //        trekovi = new LinkedList<>();
         FacesContext.getCurrentInstance().addMessage(null, message);
+        try {
+            context.redirect("faces/svaputovanja.xhtml");
+        } catch (IOException ex) {
+            Logger.getLogger(PutovanjeManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
     }
 
@@ -122,6 +166,22 @@ public class PutovanjeManagedBean implements Serializable {
 
     public void setFajl(UploadedFile fajl) {
         this.fajl = fajl;
+    }
+
+    public void setLog(LogInManagedBean log) {
+        this.log = log;
+    }
+
+    public void setMesta(DualListModel<Mesto> mesta) {
+        this.mesta = mesta;
+    }
+
+    public DualListModel<Mesto> getMesta() {
+        return mesta;
+    }
+
+    public void setSvaPutovanjaManagedBean(SvaPutovanjaManagedBean svaPutovanjaManagedBean) {
+        this.svaPutovanjaManagedBean = svaPutovanjaManagedBean;
     }
 
 }

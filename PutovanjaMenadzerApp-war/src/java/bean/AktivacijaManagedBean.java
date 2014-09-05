@@ -10,15 +10,15 @@ import ejb.KorisnikSessionBeanLocal;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
 import javax.faces.context.FacesContext;
-import javax.inject.Named;
 import util.Util;
 
 /**
  *
  * @author Sanja
  */
-@Named(value = "aktivacijaManagedBean")
+@ManagedBean(name = "aktivacijaManagedBean")
 @RequestScoped
 public class AktivacijaManagedBean {
 

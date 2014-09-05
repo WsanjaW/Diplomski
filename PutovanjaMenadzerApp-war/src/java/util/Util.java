@@ -6,6 +6,7 @@
 package util;
 
 import java.util.Properties;
+import java.util.Random;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;
@@ -67,5 +68,39 @@ public class Util {
             buffer.append(characters.charAt((int) index));
         }
         return buffer.toString();
+    }
+
+    public static String generisiBoju() {
+        Random r = new Random();
+        int randRed = r.nextInt(256);
+        int randGreen = r.nextInt(256);
+        int randBlue = r.nextInt(256);
+        
+        String hexRed = Integer.toHexString(randRed);
+        String hexGreen = Integer.toHexString(randGreen);
+        String hexBlue = Integer.toHexString(randBlue);
+        
+        return "#" + hexRed + hexGreen + hexBlue;
+        
+//        /* get random red, green, and blue from 0 to 255 */
+//        int randomred = Math.floor(Math.random() * 255);
+//        var randomgreen = Math.floor(Math.random() * 255);
+//        var randomblue = Math.floor(Math.random() * 255);
+//
+//        /* convert each decimal number to hexadecimal */
+//        var hred = new String(randomred.toString(16));
+//        var hgreen = new String(randomgreen.toString(16));
+//        var hblue = new String(randomblue.toString(16));
+//
+//        /* pad with 0 if necessary 
+//         (e.g. make sure to output 05 instead of just 5) */
+//        hred = String('00'+hred
+//        ).slice(-2);
+//        hgreen = String('00'+hgreen
+//        ).slice(-2);
+//        hblue = String('00'+hblue
+//        ).slice(-2);
+//
+//        return '#' + hred + hgreen + hblue;
     }
 }

@@ -5,36 +5,42 @@
  */
 package bean;
 
+import domen.Mesto;
 import domen.Putovanje;
 import domen.Trek;
 import domen.Wp;
 import ejb.TrekSessionBeanLocal;
 import java.io.Serializable;
 import java.util.List;
-import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.inject.Named;
 import org.primefaces.event.map.OverlaySelectEvent;
 import org.primefaces.model.map.DefaultMapModel;
 import org.primefaces.model.map.LatLng;
 import org.primefaces.model.map.MapModel;
+import org.primefaces.model.map.Marker;
 import org.primefaces.model.map.Polyline;
+import util.Util;
 
 /**
  *
  * @author Sanja
  */
-@Named(value = "prikazTrekaManagedBean")
-@RequestScoped
+@ManagedBean(name = "prikazTrekaManagedBean")
+@ViewScoped
 public class PrikazTrekaManagedBean implements Serializable {
 
     @EJB
     private TrekSessionBeanLocal trekSessionBean;
+    
+    @ManagedProperty("#{svaPutovanjaManagedBean}")
+    private SvaPutovanjaManagedBean svaPutovanjaMB;
 
     /**
      * Creates a new instance of PrikazTrekaManagedBean
@@ -42,14 +48,17 @@ public class PrikazTrekaManagedBean implements Serializable {
     public PrikazTrekaManagedBean() {
     }
     private MapModel polylineModel;
+    private MapModel simpleModel;
+    
     private String kordinate;
 
     public void prikaziTrek() {
         polylineModel = new DefaultMapModel();
+        simpleModel = new DefaultMapModel();
         Polyline polyline = new Polyline();
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        Putovanje selektovanoPutovanje = (Putovanje) context.getSessionMap().get("putovanje");
-
+        Putovanje selektovanoPutovanje =  svaPutovanjaMB.getSelektovanoPutovanje();
+       
         if (selektovanoPutovanje != null) {
             for (Trek trek : selektovanoPutovanje.getTrekList()) {
                 List<Wp> wps = trekSessionBean.listaWp(trek);
@@ -63,8 +72,9 @@ public class PrikazTrekaManagedBean implements Serializable {
                         polyline.getPaths().add(coord);
                     }
 
+                    polyline.setId(Integer.toString(trek.getTrekPK().getIdTrek()));
                     polyline.setStrokeWeight(3);
-                    polyline.setStrokeColor("#ED28DD");
+                    polyline.setStrokeColor(Util.generisiBoju());
                     polyline.setStrokeOpacity(1);
                     polyline.setData(trek.getNaziv());
 
@@ -72,6 +82,9 @@ public class PrikazTrekaManagedBean implements Serializable {
 
                 }
 
+            }
+            for (Mesto mesto : selektovanoPutovanje.getMestoList()) {
+                simpleModel.addOverlay(new Marker(new LatLng(mesto.getLat(), mesto.getLon()), mesto.getNaziv()));
             }
 
         }
@@ -83,12 +96,22 @@ public class PrikazTrekaManagedBean implements Serializable {
     }
 
     public void onPolylineSelect(OverlaySelectEvent event) {
-        
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Polyline Selected" + event.getOverlay().getData(), null));
+
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Polyline Selected " + event.getOverlay().getData(), null));
     }
 
     public String getKordinate() {
         return kordinate;
     }
+
+    public MapModel getSimpleModel() {
+        return simpleModel;
+    }
+
+    public void setSvaPutovanjaMB(SvaPutovanjaManagedBean svaPutovanjaMB) {
+        this.svaPutovanjaMB = svaPutovanjaMB;
+    }
+    
+    
 
 }

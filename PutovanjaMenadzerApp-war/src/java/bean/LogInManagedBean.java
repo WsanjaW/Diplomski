@@ -7,27 +7,31 @@ package bean;
 
 import domen.Korisnik;
 import ejb.KorisnikSessionBeanLocal;
+import ejb.MestoSessionBeanLocal;
 import java.io.IOException;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.ejb.EJB;
-import javax.enterprise.context.SessionScoped;
 import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.inject.Named;
 
 /**
  *
  * @author Sanja
  */
-@Named(value = "logInManagedBean")
+@ManagedBean(name = "logInManagedBean")
 @SessionScoped
 public class LogInManagedBean implements Serializable {
 
     @EJB
     private KorisnikSessionBeanLocal korisnikSessionBean;
+    
+    @EJB
+    private MestoSessionBeanLocal mestoSessionBean;
 
     private String username = "";
     private String password = "";
@@ -53,8 +57,7 @@ public class LogInManagedBean implements Serializable {
                 try {
 
                     ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-                    context.getSessionMap().put("user", korisnik);
-                    context.redirect(context.getRequestContextPath() + "/faces/index.xhtml");
+                    context.redirect(context.getRequestContextPath() + "/faces/svaputovanja.xhtml");
                 } catch (IOException ex) {
                     Logger.getLogger(LogInManagedBean.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -80,6 +83,7 @@ public class LogInManagedBean implements Serializable {
     
     public void izmeniPodatke(){
         korisnikSessionBean.promeniKorisnika(korisnik);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Korisnik promenjen", ""));
     }
 
     public String getUsername() {
@@ -111,7 +115,10 @@ public class LogInManagedBean implements Serializable {
     }
 
     public void setMestoId(String mestoId) {
-        this.korisnik.setMestoID(korisnikSessionBean.vratiMesto(mestoId));
+        this.korisnik.setMestoID(mestoSessionBean.getById(mestoId));
     }
+
+  
+    
 
 }
