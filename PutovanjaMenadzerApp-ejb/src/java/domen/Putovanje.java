@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package domen;
 
 import java.io.Serializable;
@@ -17,6 +16,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
@@ -44,6 +44,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Putovanje.findByDatumOd", query = "SELECT p FROM Putovanje p WHERE p.datumOd = :datumOd"),
     @NamedQuery(name = "Putovanje.findByDatumDo", query = "SELECT p FROM Putovanje p WHERE p.datumDo = :datumDo")})
 public class Putovanje implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -61,9 +62,16 @@ public class Putovanje implements Serializable {
     @Column(name = "datumDo")
     @Temporal(TemporalType.DATE)
     private Date datumDo;
-    @ManyToMany(mappedBy = "putovanjeList")
+
+    @JoinTable(name = "korisnikputovanje", joinColumns = {
+        @JoinColumn(name = "idPutovanje", referencedColumnName = "idPutovanje")}, inverseJoinColumns = {
+        @JoinColumn(name = "idKorisnik", referencedColumnName = "idKorisnik")})
+    @ManyToMany
     private List<Korisnik> korisnikList;
-    @ManyToMany(mappedBy = "putovanjeList")
+    @JoinTable(name = "mestoputovanje", joinColumns = {
+        @JoinColumn(name = "idPutovanje", referencedColumnName = "idPutovanje")}, inverseJoinColumns = {
+        @JoinColumn(name = "idMesto", referencedColumnName = "idMesto")})
+    @ManyToMany
     private List<Mesto> mestoList;
     @JoinColumn(name = "biciklistaId", referencedColumnName = "idKorisnik")
     @ManyToOne(optional = false)
@@ -174,5 +182,58 @@ public class Putovanje implements Serializable {
     public String toString() {
         return "domen.Putovanje[ idPutovanje=" + idPutovanje + " ]";
     }
+
+    public double ukupnaKilometraza() {
+        double d = 0.0;
+        if (trekList != null) {
+            for (Trek trek : trekList) {
+                d += trek.getKilometraza();
+            }
+        }
+        return d;
+    }
+
+    public double ukupanUspon() {
+        double d = 0.0;
+        if (trekList != null) {
+            for (Trek trek : trekList) {
+                d += trek.getUkupanUspon();
+            }
+        }
+        return d;
+    }
+
+    public String ukupnoVreme() {
+        long v = 0;
+        if (trekList != null) {
+            for (Trek trek : trekList) {
+                v += trek.getVreme();
+            }
+        }
+        v = v / 1000;
+        long h = v / 3600;
+        v = v % 3600;
+        long m = v / 60;
+        v = v % 60;
+        long s = v;
+        String hs = String.valueOf(h);
+        String ms = String.valueOf(m);
+        String ss = String.valueOf(s);
+        System.out.println(hs + " " + ms + " " + ss);
+       
+        return String.format("%02d%n:%02d%n:%02d%n",h,m,v);
+    }
     
+    public String biciklistiNaPutovanju(){
+        String s = "";
+        for (Korisnik korisnik : korisnikList) {
+            s += korisnik.getIme()+ ",";
+        }
+        if ("".equals(s)) {
+            return s;
+        }
+        return s.substring(0, s.length()-1);
+                
+    }
+
 }

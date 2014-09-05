@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package domen;
 
 import java.io.Serializable;
@@ -49,6 +48,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Korisnik.findByAktivan", query = "SELECT k FROM Korisnik k WHERE k.aktivan = :aktivan"),
     @NamedQuery(name = "Korisnik.findByAktivacionikod", query = "SELECT k FROM Korisnik k WHERE k.aktivacionikod = :aktivacionikod")})
 public class Korisnik implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -91,10 +91,7 @@ public class Korisnik implements Serializable {
     @Size(max = 9)
     @Column(name = "aktivacionikod")
     private String aktivacionikod;
-    @JoinTable(name = "korisnikputovanje", joinColumns = {
-        @JoinColumn(name = "idKorisnik", referencedColumnName = "idKorisnik")}, inverseJoinColumns = {
-        @JoinColumn(name = "idPutovanje", referencedColumnName = "idPutovanje")})
-    @ManyToMany
+    @ManyToMany(mappedBy = "korisnikList")
     private List<Putovanje> putovanjeList;
     @JoinColumn(name = "mestoID", referencedColumnName = "idMesto")
     @ManyToOne
@@ -252,7 +249,8 @@ public class Korisnik implements Serializable {
 
     @Override
     public String toString() {
-        return "domen.Korisnik[ idKorisnik=" + idKorisnik + " ]";
+        return ime + " " + prezime; 
+                 
     }
-    
+
 }

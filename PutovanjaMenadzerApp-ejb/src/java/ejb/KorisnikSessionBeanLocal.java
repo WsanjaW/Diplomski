@@ -22,10 +22,6 @@ public interface KorisnikSessionBeanLocal {
 
     List<Korisnik> sviKorisnici();
 
-    List<Mesto> svaMesta();
-
-    public Mesto vratiMesto(String mestoID);
-
     Korisnik pronadjiKorisnika(String username);
 
     Korisnik pronadjiKorisnika(String username, String password);
@@ -35,6 +31,8 @@ public interface KorisnikSessionBeanLocal {
     public void promeniKorisnika(Korisnik k);
 
     public Korisnik pronadjiKorisnikaMail(String email);
+
+    Korisnik pronadjiKorisnika(int korisnikId);
 
    
     

@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package domen;
 
 import java.io.Serializable;
@@ -41,6 +40,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Mesto.findByLon", query = "SELECT m FROM Mesto m WHERE m.lon = :lon"),
     @NamedQuery(name = "Mesto.findByLat", query = "SELECT m FROM Mesto m WHERE m.lat = :lat")})
 public class Mesto implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -59,11 +59,9 @@ public class Mesto implements Serializable {
     private Short lon;
     @Column(name = "lat")
     private Short lat;
-    @JoinTable(name = "mestoputovanje", joinColumns = {
-        @JoinColumn(name = "idMesto", referencedColumnName = "idMesto")}, inverseJoinColumns = {
-        @JoinColumn(name = "idPutovanje", referencedColumnName = "idPutovanje")})
-    @ManyToMany
-    private List<Putovanje> putovanjeList;
+    
+    @ManyToMany(mappedBy = "mestoList")
+    private List<Putovanje> mestoputovanjeList;
     @OneToMany(mappedBy = "mestoID")
     private List<Korisnik> korisnikList;
 
@@ -120,12 +118,12 @@ public class Mesto implements Serializable {
     }
 
     @XmlTransient
-    public List<Putovanje> getPutovanjeList() {
-        return putovanjeList;
+    public List<Putovanje> getMestoputovanjeList() {
+        return mestoputovanjeList;
     }
 
-    public void setPutovanjeList(List<Putovanje> putovanjeList) {
-        this.putovanjeList = putovanjeList;
+    public void setMestoputovanjeList(List<Putovanje> mestoputovanjeList) {
+        this.mestoputovanjeList = mestoputovanjeList;
     }
 
     @XmlTransient
@@ -159,7 +157,7 @@ public class Mesto implements Serializable {
 
     @Override
     public String toString() {
-        return "domen.Mesto[ idMesto=" + idMesto + " ]";
+        return naziv;
     }
-    
+
 }

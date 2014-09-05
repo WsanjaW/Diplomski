@@ -8,6 +8,7 @@ package ejb;
 import domen.Korisnik;
 import domen.Mesto;
 import java.util.List;
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -19,9 +20,12 @@ import javax.persistence.Query;
  */
 @Stateless
 public class KorisnikSessionBean implements KorisnikSessionBeanLocal {
+    
 
     @PersistenceContext(unitName = "PutovanjaMenadzerApp-ejbPU")
     private EntityManager em;
+    
+    
 
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
@@ -36,15 +40,7 @@ public class KorisnikSessionBean implements KorisnikSessionBeanLocal {
         return q.getResultList();
     }
 
-    @Override
-    public List<Mesto> svaMesta() {
-        return em.createNamedQuery("Mesto.findAll").getResultList();
-    }
-
-    @Override
-    public Mesto vratiMesto(String mestoID) {
-        return (Mesto) em.createNamedQuery("Mesto.findByIdMesto").setParameter("idMesto", Integer.parseInt(mestoID)).getSingleResult();
-    }
+    
 
     @Override
     public Korisnik pronadjiKorisnika(String username) {
@@ -82,14 +78,25 @@ public class KorisnikSessionBean implements KorisnikSessionBeanLocal {
 
     @Override
     public void promeniKorisnika(Korisnik k) {
-       em.merge(k);
+        em.merge(k);
     }
 
     @Override
     public Korisnik pronadjiKorisnikaMail(String email) {
-         Korisnik k = null;
+        Korisnik k = null;
         try {
             k = (Korisnik) em.createNamedQuery("Korisnik.findByEmail").setParameter("email", email).getSingleResult();
+        } catch (Exception ex) {
+            k = null;
+        }
+        return k;
+    }
+
+    @Override
+    public Korisnik pronadjiKorisnika(int korisnikId) {
+        Korisnik k = null;
+        try {
+            k = (Korisnik) em.createNamedQuery("Korisnik.findByIdKorisnik").setParameter("idKorisnik", korisnikId).getSingleResult();
         } catch (Exception ex) {
             k = null;
         }

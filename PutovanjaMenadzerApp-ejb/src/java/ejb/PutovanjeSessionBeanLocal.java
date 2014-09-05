@@ -21,7 +21,13 @@ public interface PutovanjeSessionBeanLocal {
 
     public List<Putovanje> vratiPutovanja();
 
-    void izmeniPutovanje(Putovanje putovanje);
+    void dodajTrek(Putovanje putovanje);
+
+    Putovanje dodjListuKorsnika(Putovanje putovanje);
+
+    public void obrisi(Putovanje selektovanoPutovanje);
+
+    Putovanje izmeniPutovanje(Putovanje putovanje);
 
     
     

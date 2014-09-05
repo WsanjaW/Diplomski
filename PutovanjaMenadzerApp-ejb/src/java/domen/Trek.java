@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package domen;
 
 import java.io.Serializable;
@@ -39,6 +38,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Trek.findByProsecnaBrzina", query = "SELECT t FROM Trek t WHERE t.prosecnaBrzina = :prosecnaBrzina"),
     @NamedQuery(name = "Trek.findByUkupanUspon", query = "SELECT t FROM Trek t WHERE t.ukupanUspon = :ukupanUspon")})
 public class Trek implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @EmbeddedId
     protected TrekPK trekPK;
@@ -49,7 +49,7 @@ public class Trek implements Serializable {
     @Column(name = "kilometraza")
     private Double kilometraza;
     @Column(name = "vreme")
-    private Double vreme;
+    private Long vreme;
     @Column(name = "prosecnaBrzina")
     private Double prosecnaBrzina;
     @Column(name = "ukupanUspon")
@@ -95,11 +95,11 @@ public class Trek implements Serializable {
         this.kilometraza = kilometraza;
     }
 
-    public Double getVreme() {
+    public Long getVreme() {
         return vreme;
     }
 
-    public void setVreme(Double vreme) {
+    public void setVreme(Long vreme) {
         this.vreme = vreme;
     }
 
@@ -160,5 +160,22 @@ public class Trek implements Serializable {
     public String toString() {
         return "domen.Trek[ trekPK=" + trekPK + " ]";
     }
-    
+
+    public String vremeString() {
+        long v = vreme;
+
+        v = v / 1000;
+        long h = v / 3600;
+        v = v % 3600;
+        long m = v / 60;
+        v = v % 60;
+        long s = v;
+        String hs = String.valueOf(h);
+        String ms = String.valueOf(m);
+        String ss = String.valueOf(s);
+        
+        return String.format("%02d%n:%02d%n:%02d%n",h,m,v);
+
+    }
+
 }

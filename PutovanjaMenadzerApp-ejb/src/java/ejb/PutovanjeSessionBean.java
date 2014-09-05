@@ -5,6 +5,7 @@
  */
 package ejb;
 
+import domen.Mesto;
 import domen.Putovanje;
 import domen.Trek;
 import domen.TrekPK;
@@ -30,36 +31,40 @@ public class PutovanjeSessionBean implements PutovanjeSessionBeanLocal {
     // "Insert Code > Add Business Method")
     @Override
     public void sacuvajPutovanje(Putovanje putovanje) {
-        List<Trek> trekovi = putovanje.getTrekList();
-        putovanje.setTrekList(null);
-        em.persist(putovanje);
-        int id = (int) em.createQuery("SELECT MAX(p.idPutovanje) FROM Putovanje p").getSingleResult();
-        System.out.println(id);
-        putovanje.setTrekList(trekovi);
+
+        // za id novog putovanja
+        //TODO posebna metoda
+        int id = 0;
+        try {
+            id = (int) em.createQuery("SELECT MAX(p.idPutovanje) FROM Putovanje p").getSingleResult();
+        } catch (Exception e) {
+            id = 0;
+        }
+        id = id + 1;
+        putovanje.setIdPutovanje(id);
+        
         int i = 1;
         for (Trek t : putovanje.getTrekList()) {
             t.setPutovanje(putovanje);
             t.setTrekPK(new TrekPK(id, i));
             i++;
         }
-        em.merge(putovanje);
+        for (Mesto mesto : putovanje.getMestoList()) {
+            mesto.getMestoputovanjeList().add(putovanje);
+        }
+        
+        em.persist(putovanje);
     }
 
     @Override
     public List<Putovanje> vratiPutovanja() {
         List<Putovanje> putovanja = em.createNamedQuery("Putovanje.findAll").getResultList();
-//        for (Putovanje putovanje : putovanja) {
-//            List<Trek> trekovi =  em.createNamedQuery("Trek.findByIdPutovanje").setParameter("idPutovanje", putovanje.getIdPutovanje()).getResultList();
-//            System.out.println(trekovi);
-//            putovanje.setTrekList(trekovi);
-//           // System.out.println(putovanje.getTrekList().get(0).getNaziv());
-//        }
 
         return putovanja;
     }
 
     @Override
-    public void izmeniPutovanje(Putovanje putovanje) {
+    public void dodajTrek(Putovanje putovanje) {
 
         int id = putovanje.getIdPutovanje();
         Query query = em.createQuery("SELECT MAX(tr.trekPK.idTrek) FROM Trek tr WHERE tr.trekPK.idPutovanje = :idPut").setParameter("idPut", id);
@@ -70,15 +75,35 @@ public class PutovanjeSessionBean implements PutovanjeSessionBeanLocal {
         }
         Trek t = putovanje.getTrekList().get(putovanje.getTrekList().size() - 1);
         t.setPutovanje(putovanje);
-        t.setTrekPK(new TrekPK(id, i));
+        t.setTrekPK(new TrekPK());
+        t.getTrekPK().setIdPutovanje(id);
+        t.getTrekPK().setIdTrek(i);
+
         int j = 1;
         for (Wp wp : t.getWpList()) {
             wp.setWpPK(new WpPK(j, t.getTrekPK().getIdTrek(), t.getTrekPK().getIdPutovanje()));
             j++;
         }
-        //putovanje.getTrekList().add(t);
-        em.merge(putovanje);
-        
 
+        em.merge(putovanje);
+
+    }  
+
+    @Override
+    public Putovanje dodjListuKorsnika(Putovanje putovanje) {
+        return em.merge(putovanje);
     }
+
+    @Override
+    public void obrisi(Putovanje selektovanoPutovanje) {
+        Putovanje p = em.merge(selektovanoPutovanje);
+        em.remove(p);
+    }
+
+    @Override
+    public Putovanje izmeniPutovanje(Putovanje putovanje) {
+        Putovanje p = em.merge(putovanje);
+        return p;
+    }
+    
 }
