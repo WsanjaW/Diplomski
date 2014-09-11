@@ -7,6 +7,7 @@
 package ejb;
 
 import domen.Putovanje;
+import domen.Trek;
 import java.util.List;
 import javax.ejb.Local;
 
@@ -21,13 +22,11 @@ public interface PutovanjeSessionBeanLocal {
 
     public List<Putovanje> vratiPutovanja();
 
-    void dodajTrek(Putovanje putovanje);
-
-    Putovanje dodjListuKorsnika(Putovanje putovanje);
-
-    public void obrisi(Putovanje selektovanoPutovanje);
+    public void obrisiPutovanje(Putovanje selektovanoPutovanje);
 
     Putovanje izmeniPutovanje(Putovanje putovanje);
+
+   
 
     
     

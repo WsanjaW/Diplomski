@@ -34,6 +34,8 @@ public interface KorisnikSessionBeanLocal {
 
     Korisnik pronadjiKorisnika(int korisnikId);
 
+    
+
    
     
 }

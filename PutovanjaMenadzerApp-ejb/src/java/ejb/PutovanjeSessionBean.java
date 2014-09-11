@@ -26,9 +26,7 @@ public class PutovanjeSessionBean implements PutovanjeSessionBeanLocal {
 
     @PersistenceContext(unitName = "PutovanjaMenadzerApp-ejbPU")
     private EntityManager em;
-
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
+    
     @Override
     public void sacuvajPutovanje(Putovanje putovanje) {
 
@@ -42,7 +40,7 @@ public class PutovanjeSessionBean implements PutovanjeSessionBeanLocal {
         }
         id = id + 1;
         putovanje.setIdPutovanje(id);
-        
+
         int i = 1;
         for (Trek t : putovanje.getTrekList()) {
             t.setPutovanje(putovanje);
@@ -52,7 +50,7 @@ public class PutovanjeSessionBean implements PutovanjeSessionBeanLocal {
         for (Mesto mesto : putovanje.getMestoList()) {
             mesto.getMestoputovanjeList().add(putovanje);
         }
-        
+
         em.persist(putovanje);
     }
 
@@ -61,41 +59,11 @@ public class PutovanjeSessionBean implements PutovanjeSessionBeanLocal {
         List<Putovanje> putovanja = em.createNamedQuery("Putovanje.findAll").getResultList();
 
         return putovanja;
-    }
-
-    @Override
-    public void dodajTrek(Putovanje putovanje) {
-
-        int id = putovanje.getIdPutovanje();
-        Query query = em.createQuery("SELECT MAX(tr.trekPK.idTrek) FROM Trek tr WHERE tr.trekPK.idPutovanje = :idPut").setParameter("idPut", id);
-        List<Object> rez = query.getResultList();
-        int i = 1;
-        if (rez.get(0) != null) {
-            i = (int) rez.get(0) + 1;
-        }
-        Trek t = putovanje.getTrekList().get(putovanje.getTrekList().size() - 1);
-        t.setPutovanje(putovanje);
-        t.setTrekPK(new TrekPK());
-        t.getTrekPK().setIdPutovanje(id);
-        t.getTrekPK().setIdTrek(i);
-
-        int j = 1;
-        for (Wp wp : t.getWpList()) {
-            wp.setWpPK(new WpPK(j, t.getTrekPK().getIdTrek(), t.getTrekPK().getIdPutovanje()));
-            j++;
-        }
-
-        em.merge(putovanje);
-
     }  
+    
 
     @Override
-    public Putovanje dodjListuKorsnika(Putovanje putovanje) {
-        return em.merge(putovanje);
-    }
-
-    @Override
-    public void obrisi(Putovanje selektovanoPutovanje) {
+    public void obrisiPutovanje(Putovanje selektovanoPutovanje) {
         Putovanje p = em.merge(selektovanoPutovanje);
         em.remove(p);
     }
@@ -105,5 +73,8 @@ public class PutovanjeSessionBean implements PutovanjeSessionBeanLocal {
         Putovanje p = em.merge(putovanje);
         return p;
     }
+
     
+   
+
 }

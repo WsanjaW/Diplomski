@@ -6,9 +6,7 @@
 package ejb;
 
 import domen.Korisnik;
-import domen.Mesto;
 import java.util.List;
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -20,27 +18,26 @@ import javax.persistence.Query;
  */
 @Stateless
 public class KorisnikSessionBean implements KorisnikSessionBeanLocal {
-    
 
     @PersistenceContext(unitName = "PutovanjaMenadzerApp-ejbPU")
     private EntityManager em;
-    
-    
 
-    // Add business logic below. (Right-click in editor and choose
-    // "Insert Code > Add Business Method")
-    @Override
+   
     public void sacuvajKorisnika(Korisnik korisnik) {
         em.persist(korisnik);
     }
 
     @Override
+    public void promeniKorisnika(Korisnik k) {
+        em.merge(k);
+    }
+
+    @Override
     public List<Korisnik> sviKorisnici() {
+
         Query q = em.createNamedQuery("Korisnik.findAll");
         return q.getResultList();
     }
-
-    
 
     @Override
     public Korisnik pronadjiKorisnika(String username) {
@@ -74,11 +71,6 @@ public class KorisnikSessionBean implements KorisnikSessionBeanLocal {
             k = null;
         }
         return k;
-    }
-
-    @Override
-    public void promeniKorisnika(Korisnik k) {
-        em.merge(k);
     }
 
     @Override

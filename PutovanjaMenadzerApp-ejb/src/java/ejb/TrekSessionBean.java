@@ -31,6 +31,12 @@ public class TrekSessionBean implements TrekSessionBeanLocal {
                 .setParameter("idTrek", trek.getTrekPK().getIdTrek()).getResultList();
     }
     
+    @Override
+    public void dodajTrek(Trek trek) {
+        em.persist(trek);
+    }
+
+    
     
     
 }

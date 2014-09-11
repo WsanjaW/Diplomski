@@ -23,6 +23,7 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -55,7 +56,7 @@ public class Korisnik implements Serializable {
     @Basic(optional = false)
     @Column(name = "idKorisnik")
     private Integer idKorisnik;
-    @Size(max = 45)
+    @Size(max = 45,message = "Ime mora imati najvise 45 karaktera")
     @Column(name = "ime")
     private String ime;
     @Size(max = 45)
@@ -70,7 +71,7 @@ public class Korisnik implements Serializable {
     @Size(max = 15)
     @Column(name = "tipBicikla")
     private String tipBicikla;
-    // @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Invalid email")//if the field contains email address consider using this annotation to enforce field validation
+    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Mejl u pogresnom formatu")//if the field contains email address consider using this annotation to enforce field validation
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -97,7 +98,7 @@ public class Korisnik implements Serializable {
     @ManyToOne
     private Mesto mestoID;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "biciklistaId")
-    private List<Putovanje> putovanjeList1;
+    private List<Putovanje> putovanjaKorisnikaList;
 
     public Korisnik() {
     }
@@ -219,12 +220,12 @@ public class Korisnik implements Serializable {
     }
 
     @XmlTransient
-    public List<Putovanje> getPutovanjeList1() {
-        return putovanjeList1;
+    public List<Putovanje> getPutovanjaKorisnikaList() {
+        return putovanjaKorisnikaList;
     }
 
-    public void setPutovanjeList1(List<Putovanje> putovanjeList1) {
-        this.putovanjeList1 = putovanjeList1;
+    public void setPutovanjaKorisnikaList(List<Putovanje> putovanjaKorisnikaList) {
+        this.putovanjaKorisnikaList = putovanjaKorisnikaList;
     }
 
     @Override
