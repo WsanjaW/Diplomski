@@ -36,6 +36,7 @@ public class AktivacijaManagedBean {
     }
 
     public void posaljiMejl() {
+        
         Korisnik k = korisnikSessionBean.pronadjiKorisnikaMail(email);
         if (k != null) {
             String kod = Util.generisKod();
@@ -52,6 +53,7 @@ public class AktivacijaManagedBean {
     }
 
     public String getUsername() {
+        
         FacesContext facesContext = FacesContext.getCurrentInstance();
         String kod = (String) facesContext.getExternalContext().
                 getRequestParameterMap().get("key");

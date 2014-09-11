@@ -19,18 +19,25 @@
 
                     <h:form id="unos">
                         <p:outputLabel value="Naziv:" for="nazivtreka" />
-                        <p:inputText id="nazivtreka" value="#{trekManagedBean.trek.naziv}" title="Naziv" />
+                        <p:inputText id="nazivtreka" value="#{trekManagedBean.trek.naziv}" required="true" title="Naziv" />
                         <p:commandButton value="Dodaj trek" type="submit" update=":trekovi" ajax="false" action="#{trekManagedBean.dodajTrek()}"/>
                         <p:growl id="messages" showDetail="true" autoUpdate="true"  />
 
                     </h:form>
+                    <br></br>
                     <h:form id="unosFajla" enctype="multipart/form-data">
-                        <p:fileUpload fileUploadListener="#{trekManagedBean.handleFileUpload}" mode="advanced" dragDropSupport="false"
-                                      required="true"/>
+                       
+                        <br></br>
+                        <p:panel id="panel">
+                             <p:outputLabel id="trekl"  value="Trek .gpx fajl: #{trekManagedBean.fajl}"/>
+                             <p:fileUpload id="fajl" fileUploadListener="#{trekManagedBean.handleFileUpload}" mode="advanced" dragDropSupport="false"
+                                      required="true" update="fajl,panel" rendered="#{trekManagedBean.isRenderd()}"/>
+                        </p:panel>
+                       
                     </h:form>
 
 
-
+                   
 
                 </f:view>
             </ui:define>

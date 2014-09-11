@@ -17,7 +17,7 @@
 
                     <h:form>
 
-                        <h3>#{putovanjeManagedBean.putovanje.naziv}</h3>
+                        <h1>#{putovanjeManagedBean.putovanje.naziv}</h1>
                         <p:panelGrid columns="2">
                             <h:outputText value="DatumOd:"/>
                             <h:outputText value="#{putovanjeManagedBean.putovanje.datumOd}" title="DatumOd">
@@ -28,8 +28,7 @@
                                 <f:convertDateTime pattern="MM/dd/yy" />
                             </h:outputText>
                             <h:outputText value="Biciklisti:"/>
-                            <h:outputText value="#{putovanjeManagedBean.putovanje.biciklistaId},
-                                          #{putovanjeManagedBean.putovanje.biciklistiNaPutovanju()}" title="BiciklistaId"/>
+                            <h:outputText value="#{putovanjeManagedBean.putovanje.biciklistiNaPutovanju()}" title="BiciklistaId"/>
 
                             <h:outputText rendered="false" value="IdPutovanje:"/>
                             <h:outputText rendered="false" value="#{sputovanjeManagedBean.putovanje.idPutovanje}" title="IdPutovanje"/>

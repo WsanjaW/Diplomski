@@ -19,20 +19,21 @@
                 <f:view>
                     <h:form>
                         <h1><h:outputText value="Lista korisnika"/></h1>
-                        <p:dataTable value="#{korisnikbean.vratiSveKorisnike()}" var="item">
+                        <p:dataTable value="#{korisnikbean.sviKorsinici}" var="item" widgetVar="korsiniciTable"
+                                     emptyMessage="Ne postoje korisnici" filteredValue="#{korisnikbean.filtriraniKorsnici}">
                             <p:column>
                                 <f:facet name="header">
-                                    <h:outputText value="IdKorisnik"/>
+                                    <h:outputText value="Rb"/>
                                 </f:facet>
                                 <h:outputText value="#{item.idKorisnik}"/>
                             </p:column>
-                            <p:column>
+                            <p:column filterBy="#{item.ime}" filterMatchMode="startsWith">
                                 <f:facet name="header">
                                     <h:outputText value="Ime"/>
                                 </f:facet>
                                 <h:outputText value="#{item.ime}"/>
                             </p:column>
-                            <p:column>
+                            <p:column filterBy="#{item.prezime}" filterMatchMode="startsWith">
                                 <f:facet name="header">
                                     <h:outputText value="Prezime"/>
                                 </f:facet>
@@ -66,7 +67,7 @@
                                 <f:facet name="header">
                                     <h:outputText value="Broj kreiranih putovanja"/>
                                 </f:facet>
-                                <h:outputText value="#{item.putovanjeList1.size()}"/>
+                                <h:outputText value="#{item.putovanjaKorisnikaList.size()}"/>
                             </p:column>
                             <p:column>
                                 <f:facet name="header">

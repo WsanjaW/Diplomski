@@ -12,34 +12,36 @@
     <h:body>
         <div class="login-card">
             <f:view contentType="text/html">
-                <h:form>
-                    <h1>Login</h1>
-                    <p:panelGrid columns="2">
+                
+                <h:form class="f">
+                  
+                    
+
+                        <p:inputText id="usernameInput" value="#{logInManagedBean.username}" title="Username" 
+                                     required="true" requiredMessage="The username field is required."
+                                     rendered="true" placeholder="Username">
+
+                        </p:inputText>
+                     
+                      
+
+                        <p:inputText id="paswordInpur" value="#{logInManagedBean.password}" title="Password" 
+                                     required="true" requiredMessage="The password field is required."
+                                     rendered="true" type="password" placeholder="Password">
+
+                        </p:inputText>
+                     
 
 
-                        
-                            <p:column><p:outputLabel value="Username" for="usernameInput" rendered="true" /></p:column>
-                            <p:column ><p:inputText id="usernameInput" value="#{logInManagedBean.username}" title="Username" 
-                                                    required="true" requiredMessage="The username field is required."
-                                                    rendered="true"/></p:column>                            
-                        
-                            <p:column>
-                                <p:outputLabel value="Password" for="paswordInpur" rendered="true" />
-                            </p:column>
-                            <p:column >
-                                <p:inputText id="paswordInpur" value="#{logInManagedBean.password}" title="Password" 
-                                                    required="true" requiredMessage="The password field is required."
-                                                    rendered="true"/>
-                            </p:column>
-                        
-                            <p:column rowspan="2" styleClass="ui-widget-header">
-                               <p:commandButton value="Log In" id="submit" actionListener="#{logInManagedBean.login()}" type="submit"/>
-                            </p:column>
-                        
 
 
-                    </p:panelGrid>
+                        <p:commandButton value="Log In" id="dugme" actionListener="#{logInManagedBean.login()}" type="submit"/>
+
+
+
+
                    
+
                 </h:form>
             </f:view>
             <div class="login-help">
@@ -47,6 +49,7 @@
             </div>
 
             <p:messages id="messages" showDetail="true" autoUpdate="true" closable="true" />
+           
         </div>
     </h:body>
 </html>

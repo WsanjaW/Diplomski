@@ -13,7 +13,6 @@ import ejb.TrekSessionBeanLocal;
 import java.io.Serializable;
 import java.util.List;
 import javax.ejb.EJB;
-import javax.enterprise.context.RequestScoped;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
@@ -21,6 +20,8 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import org.primefaces.event.map.OverlaySelectEvent;
+import org.primefaces.model.chart.CartesianChartModel;
+import org.primefaces.model.chart.LineChartSeries;
 import org.primefaces.model.map.DefaultMapModel;
 import org.primefaces.model.map.LatLng;
 import org.primefaces.model.map.MapModel;
@@ -38,7 +39,7 @@ public class PrikazTrekaManagedBean implements Serializable {
 
     @EJB
     private TrekSessionBeanLocal trekSessionBean;
-    
+
     @ManagedProperty("#{svaPutovanjaManagedBean}")
     private SvaPutovanjaManagedBean svaPutovanjaMB;
 
@@ -49,16 +50,20 @@ public class PrikazTrekaManagedBean implements Serializable {
     }
     private MapModel polylineModel;
     private MapModel simpleModel;
-    
+
+    private CartesianChartModel profilVisineModel;
+
     private String kordinate;
 
     public void prikaziTrek() {
+
+        
         polylineModel = new DefaultMapModel();
         simpleModel = new DefaultMapModel();
         Polyline polyline = new Polyline();
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        Putovanje selektovanoPutovanje =  svaPutovanjaMB.getSelektovanoPutovanje();
-       
+        Putovanje selektovanoPutovanje = svaPutovanjaMB.getSelektovanoPutovanje();
+
         if (selektovanoPutovanje != null) {
             for (Trek trek : selektovanoPutovanje.getTrekList()) {
                 List<Wp> wps = trekSessionBean.listaWp(trek);
@@ -91,6 +96,24 @@ public class PrikazTrekaManagedBean implements Serializable {
 
     }
 
+    public void prikazProfilaVisine() {
+        profilVisineModel = new CartesianChartModel();
+
+        LineChartSeries series1 = new LineChartSeries();
+        series1.setLabel("Series 1");
+
+        series1.set(1, 2);
+        series1.set(2, 1);
+        series1.set(3, 3);
+        series1.set(4, 6);
+        series1.set(5, 8);
+
+        profilVisineModel.addSeries(series1);
+        
+        profilVisineModel.setTitle("Linear Chart");
+        profilVisineModel.setLegendPosition("e");
+    }
+
     public MapModel getPolylineModel() {
         return polylineModel;
     }
@@ -111,7 +134,13 @@ public class PrikazTrekaManagedBean implements Serializable {
     public void setSvaPutovanjaMB(SvaPutovanjaManagedBean svaPutovanjaMB) {
         this.svaPutovanjaMB = svaPutovanjaMB;
     }
-    
-    
+
+    public CartesianChartModel getProfilVisineModel() {
+        return profilVisineModel;
+    }
+
+    public void setProfilVisineModel(CartesianChartModel profilVisineModel) {
+        this.profilVisineModel = profilVisineModel;
+    }
 
 }

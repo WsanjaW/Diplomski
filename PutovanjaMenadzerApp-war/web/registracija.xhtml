@@ -14,7 +14,7 @@
             <f:view contentType="text/html">
 
 
-                <h:form>
+                <h:form class="fr">
                     <h1><h:outputText value="Registracija korisnika"/></h1>
                     <p:panelGrid columns="2">
                         <p:outputLabel value="IdKorisnik:" for="idKorisnik" rendered="false" />
@@ -27,11 +27,11 @@
                         <p:inputText id="prezime" value="#{korisnikbean.korisnik.prezime}" title="Prezime" />
                         <p:outputLabel value="Jmbg:" for="jmbg" />
                         <p:inputText id="jmbg" value="#{korisnikbean.korisnik.jmbg}" title="Jmbg" />
-                        <p:outputLabel value="NazivBicikla:" for="nazivBicikla" />
+                        <p:outputLabel value="Naziv Bicikla:" for="nazivBicikla" />
                         <p:inputText id="nazivBicikla" value="#{korisnikbean.korisnik.nazivBicikla}" title="NazivBicikla" />
-                        <p:outputLabel value="TipBicikla:" for="tipBicikla" />
+                        <p:outputLabel value="Tip Bicikla:" for="tipBicikla" />
                         <p:selectOneMenu id="tipBicikla" value="#{korisnikbean.korisnik.tipBicikla}" >
-                            <f:selectItem itemLabel="Select One" itemValue="" />
+                            <f:selectItem itemLabel="Izaberi..." itemValue="" />
                             <f:selectItems value="#{korisnikbean.tipoviBicikla()}" var="tip"
                                            itemLabel="#{tip}" itemValue="#{tip}"/>
 
@@ -45,13 +45,13 @@
                         <p:inputText id="username" value="#{korisnikbean.korisnik.username}" title="Username" required="true" requiredMessage="The Username field is required."/>
                         <p:outputLabel value="Mesto:" for="mestoID" />
                         <p:selectOneMenu id="mestoID" value="#{korisnikbean.mestoId}" >
-                            <f:selectItem itemLabel="Select One" itemValue="" />
+                            <f:selectItem itemLabel="Izaberi..." itemValue="" />
                             <f:selectItems value="#{korisnikbean.svaMesta()}" var="m"
                                            itemLabel="#{m.naziv}" itemValue="#{m.idMesto}"/>
 
 
                         </p:selectOneMenu>
-                        <p:commandButton value="Submit" id="submit" actionListener="#{korisnikbean.sacuvajKorsinika(korisnikbean.korisnik)}" type="submit"/>
+                        <p:commandButton value="Registruj se" id="submit" actionListener="#{korisnikbean.sacuvajKorsinika(korisnikbean.korisnik)}" type="submit"/>
 
                     </p:panelGrid>
 

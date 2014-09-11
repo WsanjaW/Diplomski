@@ -74,11 +74,14 @@ public class LogInManagedBean implements Serializable {
         korisnik = null;
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         try {
-            //     context.getSessionMap().put("user", korisnik);
+            
             context.redirect(context.getRequestContextPath() + "/");
         } catch (IOException ex) {
            ex.printStackTrace();
         }
+    }
+    public void poruka(){
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Korisnik ne moze da bude izmenjen",""));
     }
     
     public void izmeniPodatke(){

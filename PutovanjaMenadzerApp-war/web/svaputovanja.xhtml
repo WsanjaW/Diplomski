@@ -21,7 +21,7 @@
                             <f:facet name="header">
                                 <p:outputPanel>
                                     <h:outputText value="Pretraga:" />
-                                    <p:inputText id="globalFilter" onkeyup="PF('putovanjeTable').filter()" style="width:150px" placeholder="Enter keyword"/>
+                                    <p:inputText id="globalFilter" onkeyup="PF('putovanjeTable').filter()" style="width:150px" placeholder="Upisi kriterijum pretrage"/>
                                 </p:outputPanel>
                             </f:facet>
 
@@ -62,11 +62,11 @@
                                 <f:facet name="header">
                                     <h:outputText value="Broj bicikista na putovanju "/>
                                 </f:facet>
-                                <h:outputText value="#{item.korisnikList.size()+1}">
+                                <h:outputText value="#{item.korisnikList.size()}">
                                 </h:outputText>
                             </p:column>
                             <p:column>
-                                <p:commandButton value="Prikazi" action="#{svaPutovanjaManagedBean.prikaziPutovanje()}">
+                                <p:commandButton value="Prikazi" update="growl" action="#{svaPutovanjaManagedBean.prikaziPutovanje()}">
                                     <f:setPropertyActionListener value="#{item}" 
                                                                  target="#{svaPutovanjaManagedBean.selektovanoPutovanje}" />
                                 </p:commandButton>
@@ -82,7 +82,7 @@
                                     <p:commandButton value="Da" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
                                     <p:commandButton value="Ne" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
                                 </p:confirmDialog>
-
+                                <p:growl id="growl" life="3000" />
 
                             </p:column>
                         </p:dataTable>

@@ -12,23 +12,12 @@ import ejb.MestoSessionBeanLocal;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.bean.SessionScoped;
-import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import org.primefaces.model.TreeNode;
 import util.Util;
 
 /**
@@ -47,6 +36,9 @@ public class KorisnikManagedBean implements Serializable {
                 
     private Korisnik korisnik;
     private String mestoId;
+    
+    private List<Korisnik> filtriraniKorsnici;
+    private List<Korisnik> sviKorsinici;
 
     /**
      * Creates a new instance of KorisnikManagedBean
@@ -57,6 +49,7 @@ public class KorisnikManagedBean implements Serializable {
     @PostConstruct
     public void init() {
         korisnik = new Korisnik();
+        sviKorsinici = vratiSveKorisnike();
     }
 
     public Korisnik getKorisnik() {
@@ -68,19 +61,23 @@ public class KorisnikManagedBean implements Serializable {
     }
 
     public List<Korisnik> vratiSveKorisnike() {
-        return korisnikSessionBean.sviKorisnici();
+        List<Korisnik> lista = korisnikSessionBean.sviKorisnici();
+        return lista;
     }
 
     public void sacuvajKorsinika(Korisnik k) {
         
-        System.out.println(mestoId);
-        korisnik.setMestoID(mestoSessionBean.getById(mestoId));
-        String kod = Util.generisKod();
-        korisnik.setAktivacionikod(kod);
-        korisnik.setAktivan(false);
-        korisnikSessionBean.sacuvajKorisnika(korisnik);
-        Util.posaljiMail(korisnik.getEmail(),kod);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Korisnik unet", "Mejl za aktivaciju"));
+        try {
+            korisnik.setMestoID(mestoSessionBean.getById(mestoId));
+            String kod = Util.generisKod();
+            korisnik.setAktivacionikod(kod);
+            korisnik.setAktivan(false);
+            korisnikSessionBean.sacuvajKorisnika(korisnik);
+            Util.posaljiMail(korisnik.getEmail(), kod);
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Korisnik sacuvan", "Mejl za aktivaciju poslat"));
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Korisnik ne moze biti sacuvan", ""));
+        }
 
     }
 
@@ -102,6 +99,22 @@ public class KorisnikManagedBean implements Serializable {
         s.add("Road");
         s.add("Hibrid");
         return s;
+    }
+
+    public List<Korisnik> getFiltriraniKorsnici() {
+        return filtriraniKorsnici;
+    }
+
+    public void setFiltriraniKorsnici(List<Korisnik> filtriraniKorsnici) {
+        this.filtriraniKorsnici = filtriraniKorsnici;
+    }
+
+    public List<Korisnik> getSviKorsinici() {
+        return sviKorsinici;
+    }
+
+    public void setSviKorsinici(List<Korisnik> sviKorsinici) {
+        this.sviKorsinici = sviKorsinici;
     }
 
     

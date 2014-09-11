@@ -14,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
@@ -30,7 +31,10 @@ public class SvaPutovanjaManagedBean implements Serializable {
     @EJB
     private PutovanjeSessionBeanLocal putovanjeSessionBean;
 
+    //lista svih putovanje
     private List<Putovanje> putovanja;
+    
+    //lista nakon pretrage
     private List<Putovanje> filtriranaPutovanja;
 
     private Putovanje selektovanoPutovanje;
@@ -48,22 +52,23 @@ public class SvaPutovanjaManagedBean implements Serializable {
 
     }
 
+    /**
+     * Redirektuje na stranicu 
+     * za prikaz jednog putovanja.
+     */
     public void prikaziPutovanje() {
+        ExternalContext contex = null;
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            //context.getSessionMap().put("putovanje", selektovanoPutovanje);
             context.redirect(context.getRequestContextPath() + "/faces/jednoputovanje.xhtml");
+            
         } catch (IOException ex) {
-            Logger.getLogger(SvaPutovanjaManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+             FacesMessage message= new FacesMessage("Greska u prikazu putovanja");
+             FacesContext.getCurrentInstance().addMessage(null, message);
         }
     }
 
-    
-    
-    
-
-    
-
+    //get i set metode
     public List<Putovanje> getPutovanja() {
         //putovanja = putovanjeSessionBean.vratiPutovanja();
         return putovanja;

@@ -59,9 +59,9 @@ public class KorisniciNaPutovanjuManagedBean {
         putovanje = svaPutovanjaManagedBean.getSelektovanoPutovanje();
         List<Korisnik> izvornaKorisnici = new ArrayList<>();
         List<Korisnik> odabraniKorisnici = new ArrayList<>();
-
+        //korisnici koji su vec na putovanju
         odabraniKorisnici = putovanje.getKorisnikList();
-
+        //svi korisnici,bez onih koji su vec registrovani
         izvornaKorisnici = korisnikSessionBean.sviKorisnici();
         for (Korisnik korisnik : odabraniKorisnici) {
             izvornaKorisnici.remove(korisnik);
@@ -69,26 +69,34 @@ public class KorisniciNaPutovanjuManagedBean {
         korisnici = new DualListModel<>(izvornaKorisnici, odabraniKorisnici);
     }
 
+    /**
+     * Cuva izabrane korisnike u bazu
+     */
     public void registrujKorisnike() {
 
-        List<Korisnik> dodatiKorisnici = korisnici.getTarget();
+        try {
+            List<Korisnik> dodatiKorisnici = korisnici.getTarget();
 
-        putovanje.setKorisnikList(new ArrayList<Korisnik>());
+            putovanje.setKorisnikList(new ArrayList<Korisnik>());
 
-        for (Korisnik korisnik : dodatiKorisnici) {
-            if (korisnik.getPutovanjeList() == null) {
-                korisnik.setPutovanjeList(new ArrayList<Putovanje>());
+            for (Korisnik korisnik : dodatiKorisnici) {
+                if (korisnik.getPutovanjeList() == null) {
+                    korisnik.setPutovanjeList(new ArrayList<Putovanje>());
+
+                }
+                korisnik.getPutovanjeList().add(putovanje);
 
             }
-            korisnik.getPutovanjeList().add(putovanje);
+            putovanje.setKorisnikList(dodatiKorisnici);
+            putovanje = putovanjeSessionBean.izmeniPutovanje(putovanje);
+            FacesMessage message = new FacesMessage("Dodati korisnici");
+            FacesContext.getCurrentInstance().addMessage(null, message);
 
+        } catch (Exception e) {
+            FacesMessage message = new FacesMessage("Greska pri dodavanju korisnika");
+            FacesContext.getCurrentInstance().addMessage(null, message);
         }
-        putovanje.setKorisnikList(dodatiKorisnici);
 
-        putovanje = putovanjeSessionBean.dodjListuKorsnika(putovanje);
-        FacesMessage message = new FacesMessage("Dodati korisnici");
-        FacesContext.getCurrentInstance().addMessage(null, message);
-             
     }
 
     public void setSvaPutovanjaManagedBean(SvaPutovanjaManagedBean svaPutovanjaManagedBean) {

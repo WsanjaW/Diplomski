@@ -5,11 +5,13 @@
  */
 package bean;
 
-import domen.Korisnik;
 import domen.Putovanje;
 import domen.Trek;
 import domen.TrekPK;
+import domen.Wp;
+import domen.WpPK;
 import ejb.PutovanjeSessionBeanLocal;
+import ejb.TrekSessionBeanLocal;
 import java.io.IOException;
 import java.io.Serializable;
 import javax.annotation.PostConstruct;
@@ -18,10 +20,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import obradafajla.ObradaFajla;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
@@ -32,18 +32,16 @@ import org.primefaces.model.UploadedFile;
 @ManagedBean(name = "trekManagedBean")
 @ViewScoped
 public class TrekManagedBean implements Serializable {
-
+    
     @EJB
-    private PutovanjeSessionBeanLocal putovanjeSessionBean;
-
-    @ManagedProperty("#{logInManagedBean}")
-    private LogInManagedBean log;
+    private TrekSessionBeanLocal trekSessionBean;
 
     @ManagedProperty("#{svaPutovanjaManagedBean}")
     private SvaPutovanjaManagedBean svaPutovanjaManagedBean;
 
     private Trek trek;
-    private UploadedFile fajl;
+    private String fajl;
+    private boolean rendered;
 
     /**
      * Creates a new instance of TrekManagedBean
@@ -53,80 +51,93 @@ public class TrekManagedBean implements Serializable {
 
     @PostConstruct
     public void init() {
+        rendered = true;
         trek = new Trek();
         trek.setTrekPK(new TrekPK());
-
     }
 
+    /**
+     * Dodaje trek u selektovano putovanje i upisuje ga u bazu
+     *
+     * @return stranica
+     */
     public String dodajTrek() {
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        Korisnik k = log.korisnik;
-        //  Korisnik k = (Korisnik) context.getSessionMap().get("user");
-        // putovanje.setTrekList(trekovi);
 
         Putovanje putovanje = svaPutovanjaManagedBean.getSelektovanoPutovanje();
-        putovanje.setBiciklistaId(k);
+        //pronalazi id poslednjeg treka
+        //kako bi se postavio potreban trekID
+        //TODO: u posebnu metodu
+        try {
+            int id = 0;
+            int max = 0;
+            for (Trek trek1 : putovanje.getTrekList()) {
+                if (trek1.getTrekPK().getIdTrek() > max) {
+                    max = trek1.getTrekPK().getIdTrek();
+                }
+            }
+            id = max + 1;
+            //postavi parametre za trek
+            trek.setPutovanje(putovanje);
+            trek.setTrekPK(new TrekPK());
+            trek.getTrekPK().setIdPutovanje(putovanje.getIdPutovanje());
+            trek.getTrekPK().setIdTrek(id);
 
-        putovanje.getTrekList().add(trek);
-        putovanjeSessionBean.dodajTrek(putovanje);
-        trek = new Trek();
-        trek.setTrekPK(new TrekPK());
-        context.getSessionMap().put("putovanje", putovanje);
-        FacesMessage message = new FacesMessage(putovanje.getNaziv());
-        return "jednoputovanje.xhtml";
+            //postavljanje id-eva za wp-te
+            int j = 1;
+            for (Wp wp : trek.getWpList()) {
+                wp.setWpPK(new WpPK(j, trek.getTrekPK().getIdTrek(), trek.getTrekPK().getIdPutovanje()));
+                j++;
+            }
+            //dodavanje treka putovanju
+            putovanje.getTrekList().add(trek);
+            //cuvanje treka u bazi
+            trekSessionBean.dodajTrek(trek);
+
+            return "jednoputovanje.xhtml";
+        } catch (Exception e) {
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Greska pri dodavanju treka"));
+            return "";
+        }
+
     }
 
+    /**
+     * Handluje uploadovanje fajla, obradjuje fajl i popunjava potrebne
+     * parametre za trek i za listu wp. Poziva se kada se fajl upladuje
+     *
+     * @param event
+     */
     public void handleFileUpload(FileUploadEvent event) {
 
+        //upladovan fajl
         UploadedFile uFajl = event.getFile();
-
+        fajl = uFajl.getFileName();
+        FacesMessage message;
         ObradaFajla of = null;
         try {
+
             of = new ObradaFajla(uFajl.getInputstream());
         } catch (IOException ex) {
+            message = new FacesMessage("Greska pri citanju fajla");
             ex.printStackTrace();
         }
-        trek = new Trek();
-        trek.setKilometraza(of.getKilometraza());
-        trek.setUkupanUspon(of.getUkupanUspon());
-        trek.setVreme(of.getVreme());
 
-        trek.setProsecnaBrzina(of.getProsecnaBrzina());
-
-        trek.setWpList(of.getAllWp());
-
-        FacesMessage message = new FacesMessage("Kilometrazaaa " + trek.getKilometraza());
+        try {
+            trek = new Trek();
+            trek.setKilometraza(of.getKilometraza());
+            trek.setUkupanUspon(of.getUkupanUspon());
+            trek.setVreme(of.getVreme());
+            trek.setProsecnaBrzina(of.getProsecnaBrzina());
+            trek.setWpList(of.getAllWp());
+            rendered = false;
+            message = new FacesMessage("Trek uspesno ucitan");
+        } catch (Exception e) {
+            message = new FacesMessage("Greska pri obradi fajla!");
+        }
         FacesContext.getCurrentInstance().addMessage(null, message);
     }
 
-    private Integer progress;
-
-    public Integer getProgress() {
-        if (progress == null) {
-            progress = 0;
-        } else {
-            progress = progress + (int) (Math.random() * 35);
-
-            if (progress > 100) {
-                progress = 100;
-            }
-        }
-
-        return progress;
-    }
-
-    public void setProgress(Integer progress) {
-        this.progress = progress;
-    }
-
-    public void onComplete() {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Progress Completed"));
-    }
-
-    public void cancel() {
-        progress = null;
-    }
-
+    //get i set metode
     public Trek getTrek() {
         return trek;
     }
@@ -135,20 +146,24 @@ public class TrekManagedBean implements Serializable {
         this.trek = trek;
     }
 
-    public UploadedFile getFajl() {
+    public String getFajl() {
         return fajl;
     }
 
-    public void setFajl(UploadedFile fajl) {
+    public void setFajl(String fajl) {
         this.fajl = fajl;
-    }
-
-    public void setLog(LogInManagedBean log) {
-        this.log = log;
     }
 
     public void setSvaPutovanjaManagedBean(SvaPutovanjaManagedBean svaPutovanjaManagedBean) {
         this.svaPutovanjaManagedBean = svaPutovanjaManagedBean;
+    }
+
+    public boolean isRenderd() {
+        return rendered;
+    }
+
+    public void setRenderd(boolean renderd) {
+        this.rendered = renderd;
     }
 
 }

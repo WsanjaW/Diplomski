@@ -69,10 +69,12 @@ public class PutovanjeManagedBean implements Serializable {
         trek.setTrekPK(new TrekPK());
 
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        //ako se se manage bean koristi sa stranice dodajputovanje.xhtml
+        //ond je potrebno napraviti novo putovanje
+        //u supretom za putovanje postavljamo putovanje iz sesije
         if ("/dodajputovanje.xhtml".equals(context.getRequestPathInfo())) {
             putovanje = new Putovanje();
             trekovi = new LinkedList<>();
-
             List<Mesto> izvornaMesta = new ArrayList<>();
             List<Mesto> odabranaMesta = new ArrayList<>();
             izvornaMesta = mestoSessionBean.svaMesta();
@@ -83,55 +85,66 @@ public class PutovanjeManagedBean implements Serializable {
 
     }
 
+    /**
+     * Brise putovanje iz baze
+     */
     public void obrisiPutovanje() {
 
-        putovanjeSessionBean.obrisi(putovanje);
-        svaPutovanjaManagedBean.getPutovanja().remove(putovanje);
-
-    }
-
-    public void izmeniPutovanje() {
-        putovanje = putovanjeSessionBean.izmeniPutovanje(putovanje);
-        FacesMessage message = new FacesMessage("Dodati korisnici");
-        FacesContext.getCurrentInstance().addMessage(null, message);
-    }
-
-    public void dodajTrek() {
-
-        sacuvajPutovanje();
-
-    }
-
-    public void sacuvajPutovanje() {
-        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-        Korisnik k = log.korisnik;
-        System.out.println(k);
-       // Korisnik k = (Korisnik) context.getSessionMap().get("user");
-        // putovanje.setTrekList(trekovi);
-
-        // putovanje = (Putovanje) context.getSessionMap().get("putovanje");
-        List<Mesto> izabranaMesta = mesta.getTarget();
-        putovanje.setMestoList(new ArrayList<Mesto>());
-        putovanje.setMestoList(izabranaMesta);
-
-        putovanje.setBiciklistaId(k);
-        putovanje.setTrekList(trekovi);
-        putovanjeSessionBean.sacuvajPutovanje(putovanje);
-        // t.setNaziv(trek.getNaziv());
-        //putovanje.getTrekList().add(t);
-        //putovanjeSessionBean.dodajTrek(putovanje);
-        FacesMessage message = new FacesMessage(putovanje.getNaziv());
-        svaPutovanjaManagedBean.getPutovanja().add(putovanje);
-
-//        trek = new Trek();
-//        trek.setTrekPK(new TrekPK());
-//        putovanje = new Putovanje();
-//        trekovi = new LinkedList<>();
-        FacesContext.getCurrentInstance().addMessage(null, message);
         try {
+            putovanjeSessionBean.obrisiPutovanje(putovanje);
+            svaPutovanjaManagedBean.getPutovanja().remove(putovanje);
+            FacesMessage message = new FacesMessage("Putovanje " + putovanje.getNaziv() + " izbrisano");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        } catch (Exception e) {
+            FacesMessage message = new FacesMessage("Putovanje " + putovanje.getNaziv() + " ne moze biti izbrisano");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
+
+    }
+
+    /**
+     * Izmena podataka o putovanju
+     */
+    public void izmeniPutovanje() {
+        try {
+            putovanje = putovanjeSessionBean.izmeniPutovanje(putovanje);
+            FacesMessage message = new FacesMessage("Putovanje uspesno izmenjeno");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        } catch (Exception e) {
+            FacesMessage message = new FacesMessage("Greska pri izmeni putovanja");
+            FacesContext.getCurrentInstance().addMessage(null, message);
+        }
+    }
+
+    /**
+     * Cuva putovanje u bazi
+     */
+    public void sacuvajPutovanje() {
+        
+        ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+        try {
+
+            Korisnik k = log.korisnik;
+
+            List<Mesto> izabranaMesta = mesta.getTarget();
+            putovanje.setMestoList(new ArrayList<Mesto>());
+            putovanje.setMestoList(izabranaMesta);
+
+            putovanje.setBiciklistaId(k);
+            putovanje.setTrekList(trekovi);
+
+            putovanjeSessionBean.sacuvajPutovanje(putovanje);
+            //dodaj putovanje u sesiju
+            svaPutovanjaManagedBean.getPutovanja().add(putovanje);
+
+            FacesMessage message = new FacesMessage("Putovanje dodato " + putovanje.getNaziv());
+            FacesContext.getCurrentInstance().addMessage(null, message);
+            
             context.redirect("faces/svaputovanja.xhtml");
-        } catch (IOException ex) {
-            Logger.getLogger(PutovanjeManagedBean.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
+            
+            FacesMessage message = new FacesMessage("Greska pri unosu putovanja");
+            FacesContext.getCurrentInstance().addMessage(null, message);
         }
 
     }
