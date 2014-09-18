@@ -15,9 +15,8 @@
             <ui:define name="content">
                 <f:view>
                     <h:form>
-                        <p:outputLabel value="Korisnici za putovanje #{putovanjeManagedBean.putovanje.naziv}:" for="korisnici" />
-                        <br/>
-                        <br/>
+                        <h1> Korisnici za putovanje #{putovanjeManagedBean.putovanje.naziv}: </h1>
+                       
                         <p:pickList id="korisnici" value="#{korisniciNaPutovanjuManagedBean.korisnici}" var="k" itemLabel="#{k.ime} #{k.prezime}" itemValue="#{k}"
                                     showSourceFilter="true" showTargetFilter="true" filterMatchMode="contains" converter="korisnikConverter"/>
                         <p:commandButton value="Sacuvaj" type="submit" action="#{korisniciNaPutovanjuManagedBean.registrujKorisnike()}" update="growl"/>

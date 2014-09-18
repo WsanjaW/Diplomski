@@ -15,21 +15,21 @@
 
                     <h:form>
 
-                        <h1><h:outputText value="Create/Edit"/></h1>
+                        <h1><h:outputText value="Izmeni putovanje"/></h1>
                         <p:panelGrid columns="2">
 
                             <p:outputLabel value="Naziv:" for="naziv" />
                             <p:inputText id="naziv" value="#{putovanjeManagedBean.putovanje.naziv}" title="Naziv" required="true" requiredMessage="The Naziv field is required."/>
                             <p:outputLabel value="DatumOd:" for="datumOd" />
-                            <p:calendar id="datumOd" value="#{putovanjeManagedBean.putovanje.datumOd}" title="DatumOd" >
-                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                            <p:calendar id="datumOd" value="#{putovanjeManagedBean.putovanje.datumOd}" pattern="yyyy-MM-dd" title="DatumOd" >
+                                <f:convertDateTime pattern="yyyy-MM-dd" />
                             </p:calendar>
                             <p:outputLabel value="DatumDo:" for="datumDo" />
-                            <p:calendar id="datumDo" value="#{putovanjeManagedBean.putovanje.datumDo}" title="DatumDo" >
-                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                            <p:calendar id="datumDo" value="#{putovanjeManagedBean.putovanje.datumDo}" pattern="yyyy-MM-dd" title="DatumDo" >
+                                <f:convertDateTime pattern="yyyy-MM-dd" />
                             </p:calendar>
 
-                            <p:commandButton value="Submit" id="submit" actionListener="#{putovanjeManagedBean.izmeniPutovanje()}" type="submit" update="growl"/>
+                            <p:commandButton value="Izmeni putovanje" id="submit" actionListener="#{putovanjeManagedBean.izmeniPutovanje()}" type="submit" update="growl"/>
                             <p:growl id="growl" life="3000" />
                         </p:panelGrid>
 

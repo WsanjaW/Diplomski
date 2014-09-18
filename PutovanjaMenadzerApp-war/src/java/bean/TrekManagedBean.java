@@ -32,7 +32,7 @@ import org.primefaces.model.UploadedFile;
 @ManagedBean(name = "trekManagedBean")
 @ViewScoped
 public class TrekManagedBean implements Serializable {
-    
+
     @EJB
     private TrekSessionBeanLocal trekSessionBean;
 
@@ -64,18 +64,11 @@ public class TrekManagedBean implements Serializable {
     public String dodajTrek() {
 
         Putovanje putovanje = svaPutovanjaManagedBean.getSelektovanoPutovanje();
-        //pronalazi id poslednjeg treka
-        //kako bi se postavio potreban trekID
-        //TODO: u posebnu metodu
+
         try {
-            int id = 0;
-            int max = 0;
-            for (Trek trek1 : putovanje.getTrekList()) {
-                if (trek1.getTrekPK().getIdTrek() > max) {
-                    max = trek1.getTrekPK().getIdTrek();
-                }
-            }
-            id = max + 1;
+            //id poslednjeg treka
+            int id = sledeciId(putovanje);
+
             //postavi parametre za trek
             trek.setPutovanje(putovanje);
             trek.setTrekPK(new TrekPK());
@@ -98,7 +91,6 @@ public class TrekManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Greska pri dodavanju treka"));
             return "";
         }
-
     }
 
     /**
@@ -164,6 +156,18 @@ public class TrekManagedBean implements Serializable {
 
     public void setRenderd(boolean renderd) {
         this.rendered = renderd;
+    }
+
+    private int sledeciId(Putovanje putovanje) {
+        int max = 0;
+        int id = 0;
+        for (Trek trek1 : putovanje.getTrekList()) {
+            if (trek1.getTrekPK().getIdTrek() > max) {
+                max = trek1.getTrekPK().getIdTrek();
+            }
+        }
+        id = max + 1;
+        return id;
     }
 
 }

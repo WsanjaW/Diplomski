@@ -60,7 +60,7 @@ public class SvaPutovanjaManagedBean implements Serializable {
         ExternalContext contex = null;
         try {
             ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-            context.redirect(context.getRequestContextPath() + "/faces/jednoputovanje.xhtml");
+            context.redirect(context.getRequestContextPath() + "/stranice/jednoputovanje.xhtml");
             
         } catch (IOException ex) {
              FacesMessage message= new FacesMessage("Greska u prikazu putovanja");

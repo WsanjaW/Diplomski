@@ -26,7 +26,7 @@ public class MestoConverter implements Converter {
     @Override
     public Object getAsObject(FacesContext context, UIComponent component, String value) {
         if (value != null && !"".equals(value)) {
-            return mestoSessionBean.getById(value);
+            return mestoSessionBean.pronadjiMesto(value);
         }
         return null;
     }

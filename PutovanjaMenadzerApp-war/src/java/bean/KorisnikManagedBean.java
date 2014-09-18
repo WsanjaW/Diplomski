@@ -16,6 +16,7 @@ import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import util.Util;
@@ -30,13 +31,16 @@ public class KorisnikManagedBean implements Serializable {
 
     @EJB
     private KorisnikSessionBeanLocal korisnikSessionBean;
-    
+
     @EJB
     private MestoSessionBeanLocal mestoSessionBean;
-                
+
+    @ManagedProperty("#{logInManagedBean}")
+    private LogInManagedBean log;
+
     private Korisnik korisnik;
     private String mestoId;
-    
+
     private List<Korisnik> filtriraniKorsnici;
     private List<Korisnik> sviKorsinici;
 
@@ -61,14 +65,15 @@ public class KorisnikManagedBean implements Serializable {
     }
 
     public List<Korisnik> vratiSveKorisnike() {
+
         List<Korisnik> lista = korisnikSessionBean.sviKorisnici();
         return lista;
     }
 
     public void sacuvajKorsinika(Korisnik k) {
-        
+
         try {
-            korisnik.setMestoID(mestoSessionBean.getById(mestoId));
+            korisnik.setMestoID(mestoSessionBean.pronadjiMesto(mestoId));
             String kod = Util.generisKod();
             korisnik.setAktivacionikod(kod);
             korisnik.setAktivan(false);
@@ -79,6 +84,12 @@ public class KorisnikManagedBean implements Serializable {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Korisnik ne moze biti sacuvan", ""));
         }
 
+    }
+
+    public void izmeniKorisnika() {
+        korisnik = log.korisnik;
+        korisnikSessionBean.izmeniKorisnika(korisnik);
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Podaci o korisniku uspesno promenjeni", ""));
     }
 
     public List<Mesto> svaMesta() {
@@ -117,8 +128,8 @@ public class KorisnikManagedBean implements Serializable {
         this.sviKorsinici = sviKorsinici;
     }
 
-    
-    
-
+    public void setLog(LogInManagedBean log) {
+        this.log = log;
+    }
 
 }

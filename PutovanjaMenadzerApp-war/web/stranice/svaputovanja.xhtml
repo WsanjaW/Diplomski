@@ -15,6 +15,7 @@
 
 
                     <h:form id="sva">
+                        <h1>Putovanja</h1>
                         <p:dataTable value="#{svaPutovanjaManagedBean.putovanja}" var="item" widgetVar="putovanjeTable"
                                      emptyMessage="Nema putovanja" filteredValue="#{svaPutovanjaManagedBean.filtriranaPutovanja}">
 
@@ -73,9 +74,8 @@
 
 
 
-                                <p:commandButton rendered="#{item.biciklistaId eq logInManagedBean.korisnik}" value="Obrisi" action="#{putovanjeManagedBean.obrisiPutovanje()}" update="@form">
-                                    <f:setPropertyActionListener value="#{item}" 
-                                                                 target="#{svaPutovanjaManagedBean.selektovanoPutovanje}" />
+                                <p:commandButton rendered="#{item.biciklistaId eq logInManagedBean.korisnik}" value="Obrisi" action="#{putovanjeManagedBean.obrisiPutovanje(item)}" update="@form">
+
                                     <p:confirm header="Confirmation" message="Izbrisi putovanje? Brisanjem putovanja bice izbrisani svi trekovi" icon="ui-icon-alert" />
                                 </p:commandButton>
                                 <p:confirmDialog global="true">

@@ -42,7 +42,7 @@ public class AktivacijaManagedBean {
             String kod = Util.generisKod();
             k.setAktivan(false);
             k.setAktivacionikod(kod);
-            korisnikSessionBean.promeniKorisnika(k);
+            korisnikSessionBean.izmeniKorisnika(k);
             Util.posaljiMail(email, kod);
             prikazi = false;
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Aktivacija", "Mejl poslat"));
@@ -65,7 +65,7 @@ public class AktivacijaManagedBean {
             } else {
                 prikazi = false;
                 k.setAktivan(true);
-                korisnikSessionBean.promeniKorisnika(k);
+                korisnikSessionBean.izmeniKorisnika(k);
                 FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Aktivacija", "Korisnik " + k.getUsername() + " je uspesno aktiviran"));
             }
         } else {

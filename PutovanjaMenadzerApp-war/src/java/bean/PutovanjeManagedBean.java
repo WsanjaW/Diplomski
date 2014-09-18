@@ -53,8 +53,7 @@ public class PutovanjeManagedBean implements Serializable {
     private Putovanje putovanje;
     private Trek trek;
     private List<Trek> trekovi;
-    private UploadedFile fajl;
-
+    
     private DualListModel<Mesto> mesta;
 
     /**
@@ -72,7 +71,7 @@ public class PutovanjeManagedBean implements Serializable {
         //ako se se manage bean koristi sa stranice dodajputovanje.xhtml
         //ond je potrebno napraviti novo putovanje
         //u supretom za putovanje postavljamo putovanje iz sesije
-        if ("/dodajputovanje.xhtml".equals(context.getRequestPathInfo())) {
+        if (context.getRequestServletPath().endsWith("/dodajputovanje.xhtml")) {
             putovanje = new Putovanje();
             trekovi = new LinkedList<>();
             List<Mesto> izvornaMesta = new ArrayList<>();
@@ -87,16 +86,17 @@ public class PutovanjeManagedBean implements Serializable {
 
     /**
      * Brise putovanje iz baze
+     * @param p putovanje koje treba obrisati
      */
-    public void obrisiPutovanje() {
+    public void obrisiPutovanje(Putovanje p) {
 
         try {
-            putovanjeSessionBean.obrisiPutovanje(putovanje);
-            svaPutovanjaManagedBean.getPutovanja().remove(putovanje);
-            FacesMessage message = new FacesMessage("Putovanje " + putovanje.getNaziv() + " izbrisano");
+            putovanjeSessionBean.obrisiPutovanje(p);
+            svaPutovanjaManagedBean.getPutovanja().remove(p);
+            FacesMessage message = new FacesMessage("Putovanje " + p.getNaziv() + " izbrisano");
             FacesContext.getCurrentInstance().addMessage(null, message);
         } catch (Exception e) {
-            FacesMessage message = new FacesMessage("Putovanje " + putovanje.getNaziv() + " ne moze biti izbrisano");
+            FacesMessage message = new FacesMessage("Putovanje " + p.getNaziv() + " ne moze biti izbrisano");
             FacesContext.getCurrentInstance().addMessage(null, message);
         }
 
@@ -119,7 +119,7 @@ public class PutovanjeManagedBean implements Serializable {
     /**
      * Cuva putovanje u bazi
      */
-    public void sacuvajPutovanje() {
+    public void zapamtiPutovanje() {
         
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         try {
@@ -140,7 +140,7 @@ public class PutovanjeManagedBean implements Serializable {
             FacesMessage message = new FacesMessage("Putovanje dodato " + putovanje.getNaziv());
             FacesContext.getCurrentInstance().addMessage(null, message);
             
-            context.redirect("faces/svaputovanja.xhtml");
+            context.redirect(context.getRequestContextPath() + "/stranice/svaputovanja.xhtml");
         } catch (Exception ex) {
             
             FacesMessage message = new FacesMessage("Greska pri unosu putovanja");
@@ -171,14 +171,6 @@ public class PutovanjeManagedBean implements Serializable {
 
     public void setTrek(Trek trek) {
         this.trek = trek;
-    }
-
-    public UploadedFile getFajl() {
-        return fajl;
-    }
-
-    public void setFajl(UploadedFile fajl) {
-        this.fajl = fajl;
     }
 
     public void setLog(LogInManagedBean log) {

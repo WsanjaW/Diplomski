@@ -7,7 +7,8 @@
       xmlns:f="http://xmlns.jcp.org/jsf/core"
       xmlns:c="http://xmlns.jcp.org/jsp/jstl/core">
     <h:head>
-        <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+      
+        
     </h:head>
     <h:body>
         <ui:composition template="ltemplate.xhtml">
@@ -18,49 +19,68 @@
                     <h:form>
 
                         <h1>#{putovanjeManagedBean.putovanje.naziv}</h1>
-                        <p:panelGrid columns="2">
-                            <h:outputText value="DatumOd:"/>
-                            <h:outputText value="#{putovanjeManagedBean.putovanje.datumOd}" title="DatumOd">
-                                <f:convertDateTime pattern="MM/dd/yy" />
-                            </h:outputText>
-                            <h:outputText value="DatumDo:"/>
-                            <h:outputText value="#{putovanjeManagedBean.putovanje.datumDo}" title="DatumDo">
-                                <f:convertDateTime pattern="MM/dd/yy" />
-                            </h:outputText>
-                            <h:outputText value="Biciklisti:"/>
-                            <h:outputText value="#{putovanjeManagedBean.putovanje.biciklistiNaPutovanju()}" title="BiciklistaId"/>
+                        <p:panelGrid>
+                            <f:facet name="header">
+                                <p:row>
+                                    <p:column colspan="2">Podaci o putovanju</p:column>
+                                </p:row>
+                               
 
-                            <h:outputText rendered="false" value="IdPutovanje:"/>
-                            <h:outputText rendered="false" value="#{sputovanjeManagedBean.putovanje.idPutovanje}" title="IdPutovanje"/>
+                            </f:facet>
+                            <p:row> 
+                                <p:column>
+                                    <h:outputText value="Datum od: "/>
+                                    <h:outputText value="#{putovanjeManagedBean.putovanje.datumOd}" title="DatumOd">
+                                        <f:convertDateTime pattern="dd/MM/yy" />
+                                    </h:outputText>
+                                </p:column>
+                                <p:column>
+                                    <h:outputText value="Datum do: "/>
+                                    <h:outputText value="#{putovanjeManagedBean.putovanje.datumDo}" title="DatumDo">
+                                        <f:convertDateTime pattern="dd/MM/yy" />
+                                    </h:outputText>
+                                </p:column>
+                            </p:row>
+                            <p:row>
+                                <p:column colspan="2">
+                                    <h:outputText value="Biciklisti: "/>
+                                    <h:outputText value="#{putovanjeManagedBean.putovanje.biciklistiNaPutovanju()}" title="BiciklistaId"/>
+                                </p:column>
+                            </p:row>
 
-                            <h:outputText rendered="#{not empty putovanjeManagedBean.putovanje.getMestoList()}"  value="Gradovi:"/>
-                            <p:orderList rendered="#{not empty putovanjeManagedBean.putovanje.getMestoList()}"   value="#{putovanjeManagedBean.putovanje.getMestoList()}" var="city" controlsLocation="none" itemLabel="#{city.getNaziv()}" itemValue="#{city}" />
+                            <p:row>
+                                <p:column>
+                                    <h:outputText rendered="#{not empty putovanjeManagedBean.putovanje.getMestoList()}"  value="Gradovi:"/>
+                                    <p:orderList  rendered="#{not empty putovanjeManagedBean.putovanje.getMestoList()}"   value="#{putovanjeManagedBean.putovanje.getMestoList()}" var="city" controlsLocation="none" itemLabel="#{city.getNaziv()}" itemValue="#{city}" />
+                                </p:column>
+                                <p:column>
+                                    <p:fieldset legend="Statistika" style="margin-bottom:20px">
+                                        <h:panelGrid columns="2" cellpadding="5">
+                                            <h:outputText value="Ukupna kilometraza:"/>
+                                            <h:outputText
+                                                value="#{putovanjeManagedBean.putovanje.ukupnaKilometraza()}" > 
+                                                <f:convertNumber pattern="#00.00 km" />
+                                            </h:outputText>
+                                            <h:outputText value="Ukupno vreme:"/>
+                                            <h:outputText
+                                                value="#{putovanjeManagedBean.putovanje.ukupnoVreme()}" />
+                                            <h:outputText value="Ukupn uspon:"/>
+                                            <h:outputText
+                                                value="#{putovanjeManagedBean.putovanje.ukupanUspon()}" > 
+                                                <f:convertNumber pattern="#0 m" />
+                                            </h:outputText>
 
+
+                                        </h:panelGrid>
+                                    </p:fieldset>
+                                </p:column>
+                            </p:row>
 
 
 
                         </p:panelGrid>
-                        <br/>
-                        <br/>
-                        <p:fieldset legend="Statistika" style="margin-bottom:20px">
-                            <h:panelGrid columns="2" cellpadding="5">
-                                <h:outputText value="Ukupna kilometraza:"/>
-                                <h:outputText
-                                    value="#{putovanjeManagedBean.putovanje.ukupnaKilometraza()}" > 
-                                    <f:convertNumber pattern="#00.00 km" />
-                                </h:outputText>
-                                <h:outputText value="Ukupno vreme"/>
-                                <h:outputText
-                                    value="#{putovanjeManagedBean.putovanje.ukupnoVreme()}" />
-                                <h:outputText value="Ukupn uspon"/>
-                                <h:outputText
-                                    value="#{putovanjeManagedBean.putovanje.ukupanUspon()}" > 
-                                    <f:convertNumber pattern="#0 m" />
-                                </h:outputText>
 
 
-                            </h:panelGrid>
-                        </p:fieldset>
                         <p:carousel  value="#{putovanjeManagedBean.putovanje.trekList}" headerText="Trekovi" var="trek">
                             <h:panelGrid columns="2" style="width:100%" cellpadding="5" columnClasses="label,value">
 
@@ -72,7 +92,7 @@
                                 <h:outputText value="#{trek.kilometraza}">
                                     <f:convertNumber pattern="#00.00 km" />
                                 </h:outputText>
-                                <h:outputText value="Vreme" />
+                                <h:outputText value="Vreme:" />
                                 <h:outputText value="#{trek.vremeString()}">
 
                                 </h:outputText> 

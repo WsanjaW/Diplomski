@@ -18,6 +18,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpSession;
 
 /**
  *
@@ -29,10 +30,7 @@ public class LogInManagedBean implements Serializable {
 
     @EJB
     private KorisnikSessionBeanLocal korisnikSessionBean;
-    
-    @EJB
-    private MestoSessionBeanLocal mestoSessionBean;
-
+   
     private String username = "";
     private String password = "";
     Korisnik korisnik;
@@ -57,7 +55,8 @@ public class LogInManagedBean implements Serializable {
                 try {
 
                     ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-                    context.redirect(context.getRequestContextPath() + "/faces/svaputovanja.xhtml");
+                    context.getSessionMap().put("korisnik", korisnik);
+                    context.redirect(context.getRequestContextPath() + "/stranice/svaputovanja.xhtml");
                 } catch (IOException ex) {
                     Logger.getLogger(LogInManagedBean.class.getName()).log(Level.SEVERE, null, ex);
                 }
@@ -81,13 +80,9 @@ public class LogInManagedBean implements Serializable {
         }
     }
     public void poruka(){
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Korisnik ne moze da bude izmenjen",""));
+        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR,"Sistem ne može da zapamti novi trek",""));
     }
     
-    public void izmeniPodatke(){
-        korisnikSessionBean.promeniKorisnika(korisnik);
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Korisnik promenjen", ""));
-    }
 
     public String getUsername() {
         return username;
@@ -115,13 +110,5 @@ public class LogInManagedBean implements Serializable {
 
     public String getMestoId() {
         return korisnik.getMestoID().getIdMesto().toString();
-    }
-
-    public void setMestoId(String mestoId) {
-        this.korisnik.setMestoID(mestoSessionBean.getById(mestoId));
-    }
-
-  
-    
-
+    }  
 }

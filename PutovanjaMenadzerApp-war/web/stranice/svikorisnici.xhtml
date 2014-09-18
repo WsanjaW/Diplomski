@@ -17,10 +17,13 @@
 
             <ui:define name="content">
                 <f:view>
-                    <h:form>
+                    <h:form id="form">
                         <h1><h:outputText value="Lista korisnika"/></h1>
                         <p:dataTable value="#{korisnikbean.sviKorsinici}" var="item" widgetVar="korsiniciTable"
                                      emptyMessage="Ne postoje korisnici" filteredValue="#{korisnikbean.filtriraniKorsnici}">
+                            <f:facet name="header">
+                                Lista korisnika
+                            </f:facet>
                             <p:column>
                                 <f:facet name="header">
                                     <h:outputText value="Rb"/>
@@ -39,7 +42,7 @@
                                 </f:facet>
                                 <h:outputText value="#{item.prezime}"/>
                             </p:column>
-                            <p:column>
+                            <p:column rendered="false">
                                 <f:facet name="header">
                                     <h:outputText value="Jmbg"/>
                                 </f:facet>
@@ -51,36 +54,57 @@
                                 </f:facet>
                                 <h:outputText value="#{item.nazivBicikla}"/>
                             </p:column>
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="TipBicikla"/>
+                            <p:column headerText="Tip bicikla" filterBy="#{item.tipBicikla}" filterMatchMode="in">
+
+                                <f:facet name="filter">
+                                    <p:selectCheckboxMenu label="Tip" onchange="PF('korsiniciTable').filter()" panelStyle="width:125px" scrollHeight="150">
+                                        <f:selectItems value="#{korisnikbean.tipoviBicikla()}" />
+                                    </p:selectCheckboxMenu>
                                 </f:facet>
                                 <h:outputText value="#{item.tipBicikla}"/>
                             </p:column>
                             <p:column>
                                 <f:facet name="header">
-                                    <h:outputText value="MestoID"/>
+                                    <h:outputText value="Mesto"/>
                                 </f:facet>
                                 <h:outputText value="#{item.mestoID}"/>
                             </p:column>
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Broj kreiranih putovanja"/>
-                                </f:facet>
-                                <h:outputText value="#{item.putovanjaKorisnikaList.size()}"/>
-                            </p:column>
-                            <p:column>
-                                <f:facet name="header">
-                                    <h:outputText value="Broj ucesca na putovanjima"/>
-                                </f:facet>
-                                <h:outputText value="#{item.putovanjeList.size()}"/>
+
+                            <p:column style="width:32px;text-align: center">
+                                <p:commandButton update=":form:korisnikDetalji" oncomplete="PF('korisnikDialog').show()" icon="ui-icon-search" title="View">
+                                    <f:setPropertyActionListener value="#{item}" target="#{korisnikbean.korisnik}" />
+                                </p:commandButton>
                             </p:column>
                         </p:dataTable>
+
+                        <p:dialog header="Korisnik Info" widgetVar="korisnikDialog"  modal="false" showEffect="fade" hideEffect="fade" resizable="false">
+                            <p:outputPanel id="korisnikDetalji" style="text-align:center;">
+                                <p:panelGrid  columns="2" rendered="#{not empty korisnikbean.korisnik}" columnClasses="label,value">
+
+
+                                    <h:outputText value="Korisnik:" />
+                                    <h:outputText value="#{korisnikbean.korisnik.ime} #{korisnikbean.korisnik.prezime}" />
+
+                                    <h:outputText value="Kreirano putovanja:"/>
+                                    <h:outputText value="#{korisnikbean.korisnik.putovanjaKorisnikaList.size()}"/>
+
+                                    <h:outputText value="Ucesca:"/>
+                                    <h:outputText value="#{korisnikbean.korisnik.putovanjeList.size()}"/>
+
+                                    <h:outputText value="Ukupno kilometara:"/>
+                                    <h:outputText value="#{korisnikbean.korisnik.ukupnoKilometara()}">
+                                        <f:convertNumber pattern="#0.00 km" />
+                                    </h:outputText>
+
+
+                                </p:panelGrid>
+                            </p:outputPanel>
+                        </p:dialog>
                     </h:form>
                 </f:view>
             </ui:define>
         </ui:composition>
 
-       
+
     </h:body>
 </html>

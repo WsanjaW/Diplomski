@@ -19,13 +19,13 @@
 
                             <p:outputLabel value="Naziv:" for="naziv" />
                             <p:inputText id="naziv" value="#{putovanjeManagedBean.putovanje.naziv}" title="Naziv" required="true" requiredMessage="The Naziv field is required."/>
-                            <p:outputLabel value="DatumOd:" for="datumOd" />
-                            <p:calendar id="datumOd" binding="#{od}" value="#{putovanjeManagedBean.putovanje.datumOd}" title="DatumOd">
-                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                            <p:outputLabel value="Datum Od:" for="datumOd" />
+                            <p:calendar id="datumOd" binding="#{od}" pattern="yyyy-MM-dd" value="#{putovanjeManagedBean.putovanje.datumOd}" title="DatumOd">
+                                <f:convertDateTime pattern="yyyy-MM-dd" />
                             </p:calendar>
-                            <p:outputLabel value="DatumDo:" for="datumDo" />
-                            <p:calendar id="datumDo" value="#{putovanjeManagedBean.putovanje.datumDo}" title="DatumDo">
-                                <f:convertDateTime pattern="MM/dd/yyyy" />
+                            <p:outputLabel value="Datum Do:" for="datumDo" />
+                            <p:calendar id="datumDo" pattern="yyyy-MM-dd" value="#{putovanjeManagedBean.putovanje.datumDo}" title="DatumDo">
+                                <f:convertDateTime pattern="yyyy-MM-dd" />
                                 <f:attribute name="od" value="#{od}" />
                                 <f:validator validatorId="validator.dateRangeValidator" />
                             </p:calendar>
@@ -35,7 +35,7 @@
 
                         </p:panelGrid>
                         <br/>
-                        <p:commandButton value="Sacuvaj putovanje" type="submit" action="#{putovanjeManagedBean.sacuvajPutovanje()}" update="messages"/>
+                        <p:commandButton value="Sacuvaj putovanje" type="submit" action="#{putovanjeManagedBean.zapamtiPutovanje()}" update="messages"/>
                         <p:growl id="messages" showDetail="true" autoUpdate="true" />
                     </h:form>
 

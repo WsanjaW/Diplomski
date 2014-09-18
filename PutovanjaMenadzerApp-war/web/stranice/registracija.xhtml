@@ -6,10 +6,10 @@
       xmlns:p="http://primefaces.org/ui" 
       xmlns:f="http://xmlns.jcp.org/jsf/core">
     <h:head>
-        <link href="resources/css/style.css" rel="stylesheet" type="text/css" />
+        <link href="../resources/css/style.css" rel="stylesheet" type="text/css" />
     </h:head>
     <h:body>
-         
+
         <div class="reg-card">
             <f:view contentType="text/html">
 
@@ -51,9 +51,11 @@
 
 
                         </p:selectOneMenu>
-                        <p:commandButton value="Registruj se" id="submit" actionListener="#{korisnikbean.sacuvajKorsinika(korisnikbean.korisnik)}" type="submit"/>
-
                     </p:panelGrid>
+
+                    <p:commandButton style="width: 100%; margin-bottom: 10px; margin-top: 10px;" value="Registruj se" id="submit" actionListener="#{korisnikbean.sacuvajKorsinika(korisnikbean.korisnik)}" type="submit"/>
+
+
 
                 </h:form>
             </f:view>

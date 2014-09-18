@@ -13,6 +13,18 @@ body {
     padding-top: 90px;
     background: url('../images/orange-bicycle-md.png') no-repeat center top;
 }
+.fr{
+    padding-top: 20px;
+    background: url('../images/orange-bicycle-md.png') no-repeat center top;
+}
+.submitdiv{
+    padding-top: 10px;
+   
+    text-align: center;
+    display : block;
+   
+
+}
 
 .reg-card{
     padding: 40px;
