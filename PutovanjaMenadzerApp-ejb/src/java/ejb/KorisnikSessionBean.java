@@ -6,6 +6,7 @@
 package ejb;
 
 import domen.Korisnik;
+import domen.Putovanje;
 import java.util.List;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
@@ -22,21 +23,22 @@ public class KorisnikSessionBean implements KorisnikSessionBeanLocal {
     @PersistenceContext(unitName = "PutovanjaMenadzerApp-ejbPU")
     private EntityManager em;
 
-   
+    @Override
     public void sacuvajKorisnika(Korisnik korisnik) {
         em.persist(korisnik);
     }
 
     @Override
-    public void promeniKorisnika(Korisnik k) {
+    public void izmeniKorisnika(Korisnik k) {
         em.merge(k);
     }
 
     @Override
     public List<Korisnik> sviKorisnici() {
-
+        em.getEntityManagerFactory().getCache().evictAll();
         Query q = em.createNamedQuery("Korisnik.findAll");
-        return q.getResultList();
+        List<Korisnik> korisnici = q.getResultList();
+        return korisnici;
     }
 
     @Override

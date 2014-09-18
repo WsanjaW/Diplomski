@@ -18,7 +18,7 @@ public interface MestoSessionBeanLocal {
 
     public List<Mesto> svaMesta();
 
-    Mesto getById(String id);
+    Mesto pronadjiMesto(String id);
 
    
 

@@ -29,7 +29,7 @@ public class MestoSessionBean implements MestoSessionBeanLocal {
     // Add business logic below. (Right-click in editor and choose
     // "Insert Code > Add Business Method")
     @Override
-    public Mesto getById(String sid) {
+    public Mesto pronadjiMesto(String sid) {
         int id = Integer.parseInt(sid);
         return (Mesto) em.createNamedQuery("Mesto.findByIdMesto").setParameter("idMesto", id).getSingleResult();
     }

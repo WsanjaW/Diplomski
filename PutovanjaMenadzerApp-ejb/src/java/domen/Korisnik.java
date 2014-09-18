@@ -56,7 +56,7 @@ public class Korisnik implements Serializable {
     @Basic(optional = false)
     @Column(name = "idKorisnik")
     private Integer idKorisnik;
-    @Size(max = 45,message = "Ime mora imati najvise 45 karaktera")
+    @Size(max = 45, message = "Ime mora imati najvise 45 karaktera")
     @Column(name = "ime")
     private String ime;
     @Size(max = 45)
@@ -71,7 +71,7 @@ public class Korisnik implements Serializable {
     @Size(max = 15)
     @Column(name = "tipBicikla")
     private String tipBicikla;
-    @Pattern(regexp="[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message="Mejl u pogresnom formatu")//if the field contains email address consider using this annotation to enforce field validation
+    @Pattern(regexp = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", message = "Mejl u pogresnom formatu")//if the field contains email address consider using this annotation to enforce field validation
     @Basic(optional = false)
     @NotNull
     @Size(min = 1, max = 45)
@@ -250,8 +250,21 @@ public class Korisnik implements Serializable {
 
     @Override
     public String toString() {
-        return ime + " " + prezime; 
-                 
+        return ime + " " + prezime;
+
+    }
+
+    public Double ukupnoKilometara() {
+        double d = 0.0;
+        if (putovanjeList != null) {
+            for (Putovanje putovanje : putovanjeList) {
+                for (Trek trek : putovanje.getTrekList()) {
+                    d += trek.getKilometraza();
+                }
+            }
+        }
+
+        return d;
     }
 
 }

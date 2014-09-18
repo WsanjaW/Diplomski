@@ -28,7 +28,7 @@ public interface KorisnikSessionBeanLocal {
 
     Korisnik pronadjiKorisnikaPoKodu(String kod);
 
-    public void promeniKorisnika(Korisnik k);
+    public void izmeniKorisnika(Korisnik k);
 
     public Korisnik pronadjiKorisnikaMail(String email);
 
