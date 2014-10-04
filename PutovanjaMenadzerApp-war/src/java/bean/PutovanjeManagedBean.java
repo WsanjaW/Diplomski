@@ -12,13 +12,10 @@ import domen.Trek;
 import domen.TrekPK;
 import ejb.MestoSessionBeanLocal;
 import ejb.PutovanjeSessionBeanLocal;
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.annotation.PostConstruct;
 import javax.ejb.EJB;
 import javax.faces.application.FacesMessage;
@@ -27,8 +24,8 @@ import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import kontroler.Kontroler;
 import org.primefaces.model.DualListModel;
-import org.primefaces.model.UploadedFile;
 
 /**
  *
@@ -38,11 +35,9 @@ import org.primefaces.model.UploadedFile;
 @ViewScoped
 public class PutovanjeManagedBean implements Serializable {
 
-    @EJB
-    private MestoSessionBeanLocal mestoSessionBean;
-
-    @EJB
-    private PutovanjeSessionBeanLocal putovanjeSessionBean;
+    
+    @EJB 
+    private Kontroler kontroler;
 
     @ManagedProperty("#{logInManagedBean}")
     private LogInManagedBean log;
@@ -76,7 +71,7 @@ public class PutovanjeManagedBean implements Serializable {
             trekovi = new LinkedList<>();
             List<Mesto> izvornaMesta = new ArrayList<>();
             List<Mesto> odabranaMesta = new ArrayList<>();
-            izvornaMesta = mestoSessionBean.svaMesta();
+            izvornaMesta = (List<Mesto>) kontroler.ucitajMesta(new Mesto());
             mesta = new DualListModel<>(izvornaMesta, odabranaMesta);
         } else {
             putovanje = svaPutovanjaManagedBean.getSelektovanoPutovanje();
@@ -89,9 +84,10 @@ public class PutovanjeManagedBean implements Serializable {
      * @param p putovanje koje treba obrisati
      */
     public void obrisiPutovanje(Putovanje p) {
-
+        
         try {
-            putovanjeSessionBean.obrisiPutovanje(p);
+            kontroler.obisiPutovanje(p);
+           // putovanjeSessionBean.obrisiPutovanje(p);
             svaPutovanjaManagedBean.getPutovanja().remove(p);
             FacesMessage message = new FacesMessage("Putovanje " + p.getNaziv() + " izbrisano");
             FacesContext.getCurrentInstance().addMessage(null, message);
@@ -107,7 +103,7 @@ public class PutovanjeManagedBean implements Serializable {
      */
     public void izmeniPutovanje() {
         try {
-            putovanje = putovanjeSessionBean.izmeniPutovanje(putovanje);
+            putovanje = (Putovanje) kontroler.izmeniPutovanje(putovanje);
             FacesMessage message = new FacesMessage("Putovanje uspesno izmenjeno");
             FacesContext.getCurrentInstance().addMessage(null, message);
         } catch (Exception e) {
@@ -133,7 +129,7 @@ public class PutovanjeManagedBean implements Serializable {
             putovanje.setBiciklistaId(k);
             putovanje.setTrekList(trekovi);
 
-            putovanjeSessionBean.sacuvajPutovanje(putovanje);
+            kontroler.zapamtiPutovanje(putovanje);
             //dodaj putovanje u sesiju
             svaPutovanjaManagedBean.getPutovanja().add(putovanje);
 

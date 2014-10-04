@@ -2,4 +2,18 @@
 <faces-config version="2.2"
               xmlns="http://xmlns.jcp.org/xml/ns/javaee"
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd"></faces-config>
+              xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_2.xsd">
+    
+    
+    <navigation-rule>
+        
+        <from-view-id>/*</from-view-id>
+        <navigation-case>
+            <from-action>#{trekManagedBean.dodajTrek()}</from-action>
+            <from-outcome>jednoputovanje</from-outcome>
+            <to-view-id>/stranice/jednoputovanje.xhtml</to-view-id>
+            <redirect/>     
+        </navigation-case>
+    </navigation-rule>
+    
+</faces-config>

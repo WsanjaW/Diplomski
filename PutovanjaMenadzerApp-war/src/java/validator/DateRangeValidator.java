@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package validator;
 
 import java.util.Date;
@@ -24,17 +23,22 @@ public class DateRangeValidator implements Validator {
 
     @Override
     public void validate(FacesContext context, UIComponent component, Object value) throws ValidatorException {
-        if (value == null || component.getAttributes().get("od") == null) return;
+        if (value == null || component.getAttributes().get("od") == null) {
+            return;
+        }
 
         UIInput odComponent = (UIInput) component.getAttributes().get("od");
-        Date toDate   = (Date) value; 
+        Date toDate = (Date) value;
         Date fromDate = (Date) odComponent.getValue();
 
-        if (!toDate.after(fromDate)) {
-            FacesMessage message = new FacesMessage("Datum od mora biti pre datuma do.");
-            message.setSeverity(FacesMessage.SEVERITY_ERROR);
-            throw new ValidatorException(message);
+        if (toDate.getTime() != fromDate.getTime()) {
+            if (!toDate.after(fromDate)) {
+                FacesMessage message = new FacesMessage("Datum od mora biti pre datuma do.");
+                message.setSeverity(FacesMessage.SEVERITY_ERROR);
+                throw new ValidatorException(message);
+            }
         }
+
     }
 
 }

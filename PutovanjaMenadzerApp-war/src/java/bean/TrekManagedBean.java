@@ -84,9 +84,15 @@ public class TrekManagedBean implements Serializable {
             //dodavanje treka putovanju
             putovanje.getTrekList().add(trek);
             //cuvanje treka u bazi
+            long startTime = System.nanoTime();
             trekSessionBean.dodajTrek(trek);
+            long endTime = System.nanoTime();
+            long duration = endTime - startTime;
+            FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Trek uspesno sacuvan"));
+            System.out.println("Vreme ukupno: " + duration / 1000000);
 
-            return "jednoputovanje.xhtml";
+            
+            return "jednoputovanje";
         } catch (Exception e) {
             FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Greska pri dodavanju treka"));
             return "";
