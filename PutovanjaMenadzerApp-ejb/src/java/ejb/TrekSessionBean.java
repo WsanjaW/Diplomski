@@ -3,7 +3,6 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package ejb;
 
 import domen.Trek;
@@ -30,13 +29,10 @@ public class TrekSessionBean implements TrekSessionBeanLocal {
         return em.createNamedQuery("Wp.findId").setParameter("idPutovanje", trek.getTrekPK().getIdPutovanje())
                 .setParameter("idTrek", trek.getTrekPK().getIdTrek()).getResultList();
     }
-    
+
     @Override
     public void dodajTrek(Trek trek) {
         em.persist(trek);
     }
 
-    
-    
-    
 }
